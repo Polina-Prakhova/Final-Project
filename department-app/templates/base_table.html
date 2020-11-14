@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ title }}</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+
+<body>
+<header>
+    <div class="headerLink">
+        <a href="departments.html">Departments</a>
+        <a href="employees.html">Employees</a>
+    </div>
+</header>
+<div class="main">
+    <table>
+        <tr>
+            {% for header in headers %}
+            <th>{{ header }}</th>
+            {% endfor %}
+        </tr>
+        {% block content %}
+        {% endblock %}
+    </table>
+</div>
+</body>
+</html>
