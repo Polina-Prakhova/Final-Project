@@ -2,9 +2,9 @@ language: python
 python:
     - "3.8"
 install:
-    - pip install -r requirements.txt
+    - pip install -r department-app/requirements.txt
 scripts:
     - python -m unittest
-    - pylint run.py
+    - pylint department-app/run.py
 after_success:
     - coveralls
