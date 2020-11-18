@@ -3,9 +3,9 @@
 {% block content %}
 {% for department in departments %}
 <tr>
+    <td>{{ department.id }}</td>
     <td>{{ department.name }}</td>
- <!--   <td>{{ department.employees }}</td>
-    <td>{{ department.salary }}</td> -->
+   <!-- <td>{{ department.salary }}</td> -->
 </tr>
 {% endfor %}
 {% endblock %}
