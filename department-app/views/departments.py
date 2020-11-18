@@ -1,5 +1,5 @@
 from flask import render_template, Blueprint
-from models.models import Department, Employee
+from ..models.models import Department, Employee
 
 departments_page = Blueprint('departments_page', __name__,
                              template_folder='templates')
@@ -8,7 +8,7 @@ departments_page = Blueprint('departments_page', __name__,
 @departments_page.route('/')
 @departments_page.route('/index')
 @departments_page.route('/departments')
-def index():
+def show():
     lines = [{'name': 'dfasfasf', 'employees': 22, 'salary': 1},
              {'name': 'dfasfasf', 'employees': 22, 'salary': 1},
              {'name': 'dfasfasf', 'employees': 22, 'salary': 1},
