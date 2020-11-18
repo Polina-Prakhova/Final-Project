@@ -6,6 +6,8 @@ db = SQLAlchemy()
 
 
 class Department(db.Model):
+    """ Description of 'departments' table. """
+
     __tablename__ = 'departments'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -24,6 +26,8 @@ class Department(db.Model):
 
 
 class Employee(db.Model):
+    """ Description of 'employees' table. """
+
     __tablename__ = 'employees'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -31,9 +35,11 @@ class Employee(db.Model):
     birthday = db.Column(db.DateTime)
     salary = db.Column(db.Float, nullable=False)
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
-    department = db.relationship('Department', backref='employees', primaryjoin=department_id == Department.id)
+    department = db.relationship('Department', backref='employees',
+                                 primaryjoin=department_id == Department.id)
 
-    def __init__(self, name: str, birthday: datetime, salary: float, department_id: int):
+    def __init__(self, name: str, birthday: datetime, salary: float,
+                 department_id: int):
         self.name = name
         self.birthday = birthday
         self.salary = salary
@@ -44,17 +50,22 @@ class Employee(db.Model):
 
 
 class DepartmentInfo(db.Model):
+    """ Description of 'department_info' table. """
+
     __tablename__ = 'department_info'
 
-    id = db.Column(db.Integer, db.ForeignKey('departments.id'), primary_key=True)
-    department = db.relationship('Department', backref='department_info', primaryjoin=id == Department.id)
+    id = db.Column(db.Integer, db.ForeignKey('departments.id'),
+                   primary_key=True)
+    department = db.relationship('Department', backref='department_info',
+                                 primaryjoin=id == Department.id)
     avg_salary = db.Column(db.Float, nullable=False)
     count_employees = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, department_id: int, avg_salary: float, count_employees: int):
+    def __init__(self, department_id: int, avg_salary: float,
+                 count_employees: int):
         self.department_id = department_id
         self.avg_salary = avg_salary
         self.count_employees = count_employees
 
     def __repr__(self):
-        return f'<Department №{self.id} {self.avg_salary} {self.count_employees}>'
+        return f'<Department №{self.id}>'
