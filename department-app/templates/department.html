@@ -1,0 +1,12 @@
+{% extends "base_table.html" %}
+
+{% block content %}
+<tr>
+    <td>{{ department.id }}</td>
+    <td>{{ department.name }}</td>
+    <td>{{ department.avg_salary }} $</td>
+    <td>{{ department.count_employees }}</td>
+    <td><button class="btn_edit">Edit</button><br><button class="btn_del">Delete</button></td>
+</tr>
+{% endblock %}
+

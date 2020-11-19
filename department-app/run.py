@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_migrate import Migrate
 
-from views import departments, employees
-from models.models import db
+from views import departments_view, employees, employee, department_view
+from models import db
 
 
 def create_app():
@@ -11,11 +11,14 @@ def create_app():
     app.config.from_pyfile('config.py')
 
     db.init_app(app)
+
  #   with app.app_context():
  #       db.create_all()
 
-    app.register_blueprint(departments.departments_page)
+    app.register_blueprint(departments_view.departments_page)
     app.register_blueprint(employees.employees_page)
+    app.register_blueprint(employee.employee_page)
+    app.register_blueprint(department_view.department_page)
 
     migrate = Migrate(app, db)
 
