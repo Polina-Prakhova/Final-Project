@@ -19,7 +19,6 @@ MarkupSafe==1.1.1
 mccabe==0.6.1
 mysql-connector-python==8.0.22
 protobuf==3.14.0
-pylint==2.6.0
 python-dateutil==2.8.1
 python-editor==1.0.4
 requests==2.25.0
