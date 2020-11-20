@@ -3,6 +3,14 @@ margin: 0;
 padding: 0;
 }
 
+h3 {
+    text-align: center;
+    color: white;
+    margin-top: 40px;
+    font-size: 40px;
+    font-weight: lighter;
+}
+
 header {
 	text-align: right;
 	background-color: #242b36;
@@ -10,9 +18,13 @@ header {
 	weight: 100%;
 }
 
-.headerLink {
-   	margin-right: 30px;
-}
+p {
+    text-align: center;
+    color: white;
+    margin-top: 40px;
+    font-size: 22px;
+    font-weight: lighter;
+    }
 
 .headerLink a {
 	background-color: #0f141c;
@@ -22,7 +34,6 @@ header {
    	font-size: 22px;
    	cursor: pointer;
    	display: inline-block;
-   	margin-right: 20px;
    	text-align: center;
    	line-height: 70px;
     transform: translate(-50%);
@@ -48,17 +59,16 @@ body {
 	background: #0f141c;
 }
 
+.search {
+    text-align:center;
+    color: white;
+    margin-top: 30px;
+}
+
 .main { 
 	display: flex;
   	align-items: center;
   	justify-content: center;
-}
-h3 {
-    text-align: center;
-    color: white;
-    margin-top: 40px;
-    font-size: 40px;
-    font-weight: lighter;
 }
 table a {
     color: white;

@@ -1,5 +1,6 @@
 from flask import Blueprint
 
+
 template_folder = 'templates'
 
 departments_page = Blueprint(

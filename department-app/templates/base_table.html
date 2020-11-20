@@ -7,23 +7,26 @@
 </head>
 
 <body>
-<header>
-    <div class="headerLink">
-        <a href="departments">Departments</a>
-        <a href="employees">Employees</a>
-    </div>
-</header>
-<div class="main">
+    <header>
+        <div class="headerLink">
+            <a href="{{ url_for('departments.show_all_departments')}}">Departments</a>
+            <a href="{{ url_for('employees.show_all_employees')}}">Employees</a>
+        </div>
+    </header>
+
     <h3>{{ table_title }}</h3>
-    <table>
-        <tr>
-            {% for header in headers %}
-            <th>{{ header }}</th>
-            {% endfor %}
-        </tr>
-        {% block content %}
-        {% endblock %}
-    </table>
-</div>
+    {% block search %}
+    {% endblock %}
+    <div class="main">
+        <table>
+            <tr>
+                {% for header in headers %}
+                <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+            {% block content %}
+            {% endblock %}
+        </table>
+    </div>
 </body>
 </html>

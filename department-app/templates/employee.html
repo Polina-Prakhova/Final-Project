@@ -1,12 +1,14 @@
 {% extends "base_table.html" %}
 
 {% block content %}
-{% for employee in employees %}
 <tr>
+    <td>{{ employee.id }}</td>
     <td>{{ employee.name }}</td>
     <td>{{ employee.birthday }}</td>
-    <td>{{ employee.salary }}</td>
+    <td>{{ employee.department.name }}</td>
+    <td>{{ employee.working_since }}</td>
+    <td>{{ employee.salary }} $</td>
+    <td><button class="btn_edit">Edit</button><br><button class="btn_del">Delete</button></td>
 </tr>
-{% endfor %}
 {% endblock %}
 

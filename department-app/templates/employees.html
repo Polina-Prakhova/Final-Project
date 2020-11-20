@@ -1,9 +1,26 @@
 {% extends "base_table.html" %}
 
+{% block search %}
+
+    <div class="search">
+        <form action="{{ url_for('employees.show_employees_birthday', start=start_b, end=end_b)}}">
+            <label for="start_b">Find by birthday: between </label>
+            <input type="date" id="start_b" name="start_b">
+            <label for="end_b"> and </label>
+            <input type="date" id="end_b" name="end_b">
+            <input type="submit">
+        </form>
+    </div>
+    <p>{{ message }}</p>
+{% endblock %}
+
 {% block content %}
 {% for employee in employees %}
 <tr>
-    <td>{{ employee.name }}</td>
+    <td>{{ employee.id }}</td>
+    <td><a href="{{ url_for('employee.show_employee', id_=employee.id)}}">{{ employee.name }}</a></td>
+    <td>{{ employee.birthday }}</td>
+    <td>{{ employee.department.name }}</td>
 </tr>
 {% endfor %}
 {% endblock %}
