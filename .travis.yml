@@ -8,6 +8,6 @@ install:
     - pip install -r requirements.txt
 script:
     - pylint --output-format=text department-app
-    - coverage run --source=department-app/tests test
+    - coverage run -m unittest department-app/tests/
 after_success:
     - coveralls

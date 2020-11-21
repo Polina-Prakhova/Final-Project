@@ -10,14 +10,11 @@ class Department(db.Model):
     name = db.Column(db.String(100), unique=True, nullable=False)
     avg_salary = db.Column(db.Float, nullable=False, server_default='0.0')
     count_employees = db.Column(db.Integer, nullable=False, server_default='0')
+    email = db.Column(db.String(64))
 
-    def create(self):
-        db.session.add(self)
-        db.session.commit()
-        return self
-
-    def __init__(self, name: str):
+    def __init__(self, name: str, email: str = ''):
         self.name = name
+        self.email = email
 
     def __repr__(self):
         return '<Department %r>' % self.name

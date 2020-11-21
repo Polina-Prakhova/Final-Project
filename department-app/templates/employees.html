@@ -2,16 +2,16 @@
 
 {% block search %}
 
-    <div class="search">
-        <form action="{{ url_for('employees.show_employees_birthday', start=start_b, end=end_b)}}">
-            <label for="start_b">Find by birthday: between </label>
-            <input type="date" id="start_b" name="start_b">
-            <label for="end_b"> and </label>
-            <input type="date" id="end_b" name="end_b">
-            <input type="submit">
-        </form>
-    </div>
-    <p>{{ message }}</p>
+<div class="search">
+    <form action="{{ url_for('employees.show_employees_birthday', start=start_b, end=end_b)}}">
+        <label for="start_b">Find by birthday: between </label>
+        <input type="date" id="start_b" name="start_b">
+        <label for="end_b"> and </label>
+        <input type="date" id="end_b" name="end_b">
+        <input type="submit">
+    </form>
+</div>
+<p>{{ message }}</p>
 {% endblock %}
 
 {% block content %}

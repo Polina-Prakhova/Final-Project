@@ -5,7 +5,7 @@ from . import employees_page
 from service import employee_service as es
 
 
-@employees_page.route('/employees')
+@employees_page.route('/employees', methods=['GET'])
 def show_all_employees():
     """ Render template with the list of all employees. """
 
@@ -18,7 +18,7 @@ def show_all_employees():
                            employees=employees)
 
 
-@employees_page.route('/employees/')
+@employees_page.route('/employees/', methods=['GET'])
 def show_employees_birthday():
     """ Render template with the list of employees
     whose birthdays are in specific period. """

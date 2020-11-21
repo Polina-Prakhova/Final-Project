@@ -1,28 +1,33 @@
 from flask import Flask
-from flask_migrate import Migrate
+from flask_migrate import Migrate, MigrateCommand
+from flask_script import Manager
 
-from views import departments_view, employees_view, employee_view, department_view
-from models import db
+from views import departments_view, employees_view, employee_view, \
+    department_view
+from models import *
 
 
 def create_app():
-    app = Flask(__name__)
+    application = Flask(__name__)
 
-    app.config.from_pyfile('config.py')
+    application.config.from_pyfile('config.py')
 
-    db.init_app(app)
+    db.init_app(application)
 
- #   with app.app_context():
- #       db.create_all()
+    #   with application.app_context():
+    #       db.create_all()
 
-    app.register_blueprint(departments_view.departments_page)
-    app.register_blueprint(employees_view.employees_page)
-    app.register_blueprint(employee_view.employee_page)
-    app.register_blueprint(department_view.department_page)
+    migrate = Migrate(application, db)
 
-    migrate = Migrate(app, db)
+    manager = Manager(application)
+    manager.add_command('db', MigrateCommand)
 
-    return app
+    application.register_blueprint(departments_view.departments_page)
+    application.register_blueprint(employees_view.employees_page)
+    application.register_blueprint(employee_view.employee_page)
+    application.register_blueprint(department_view.department_page)
+
+    return application
 
 
 if __name__ == "__main__":

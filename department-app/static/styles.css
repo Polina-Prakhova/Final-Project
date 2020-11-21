@@ -117,7 +117,7 @@ td {
     font-size: 20px;
 }
 
-.btn_edit, .btn_del {
+.btn_edit, .btn_del, .btn_sub {
 	background-color: #0f141c;
     color: #FFFFFF;
     margin-top: 10px;
@@ -134,4 +134,8 @@ td {
 
 .btn_del:hover {
   background: #a10a0a;
+}
+
+.btn_sub:hover {
+  background: #81d9e3;
 }

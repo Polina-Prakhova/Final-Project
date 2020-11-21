@@ -8,7 +8,15 @@
     <td>{{ employee.department.name }}</td>
     <td>{{ employee.working_since }}</td>
     <td>{{ employee.salary }} $</td>
-    <td><button class="btn_edit">Edit</button><br><button class="btn_del">Delete</button></td>
+    <td>
+        <form class="hidden" method="post" action="{{ url_for('employee.update_employee', id_=employee.id)}}">
+            <button class="btn_edit">Update</button>
+        </form>
+        <br>
+        <form class="hidden" method="post" action="{{ url_for('employee.delete_employee', id_=employee.id)}}">
+            <button class="btn_del">Delete</button>
+        </form>
+    </td>
 </tr>
 {% endblock %}
 

@@ -6,7 +6,16 @@
     <td>{{ department.name }}</td>
     <td>{{ department.avg_salary }} $</td>
     <td>{{ department.count_employees }}</td>
-    <td><button class="btn_edit">Edit</button><br><button class="btn_del">Delete</button></td>
+    <td>{{ department.email }}</td>
+    <td>
+        <form class="hidden" method="post" action="{{ url_for('department.update_department', id_=department.id)}}">
+            <button class="btn_edit">Update</button>
+        </form>
+        <br>
+        <form class="hidden" method="post" action="{{ url_for('department.delete_department', id_=department.id)}}">
+            <button class="btn_del">Delete</button>
+        </form>
+    </td>
 </tr>
 {% endblock %}
 
