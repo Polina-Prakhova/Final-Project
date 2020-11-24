@@ -1,8 +1,10 @@
 """ Employees view """
+from datetime import date
+
 from flask import render_template, request
 
-from . import employees_page
 from service import employee_service as es
+from . import employees_page
 
 
 @employees_page.route('/employees', methods=['GET'])
@@ -15,6 +17,7 @@ def show_all_employees():
                            title='Employees',
                            table_title='List of Employees',
                            headers=titles,
+                           date=date.today(),
                            employees=employees)
 
 

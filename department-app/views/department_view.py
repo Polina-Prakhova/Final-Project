@@ -52,3 +52,22 @@ def update_done_department(id_: int):
     email = request.form.get("email")
     ds.update(id_, name, email)
     return redirect(url_for("department.show_department", id_=id_))
+
+
+@department_page.route("/departments/add", methods=["GET"])
+def add_department():
+    """ Render page for adding a new department. """
+    titles = ['Name', 'E-mail']
+    return render_template('add_department.html',
+                           title='Add department',
+                           table_title='Adding new department',
+                           headers=titles)
+
+
+@department_page.route("/departments/add_done", methods=["POST"])
+def add_done_department():
+    """ Update an existing department. """
+    name = request.form.get("name")
+    email = request.form.get("email")
+    ds.add(name, email)
+    return redirect(url_for("departments.show_all_departments"))

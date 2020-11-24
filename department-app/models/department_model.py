@@ -1,3 +1,4 @@
+""" Description of Department table """
 from . import db
 
 

@@ -32,18 +32,19 @@ def get(id_: int):
     return department
 
 
-def add(department: Department):
+def add(name: str, email: str = None):
     """ Insert new department. """
-    new_department = department
+    new_department = Department(name, email)
     try:
         db.session.add(new_department)
     except Exception:
         db.session.rollback()
         raise
     db.session.commit()
+    return new_department.id
 
 
-def update(id_: int, name: str, email: str = ''):
+def update(id_: int, name: str, email: str):
     """ Update existing department. """
     try:
         q = db.session.query(Department)

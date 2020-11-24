@@ -5,9 +5,10 @@ python:
     - "3.8"
 install:
     - pip install pylint
+    - pip install pylint_flask_sqlalchemy
     - pip install -r requirements.txt
 script:
-    - pylint --output-format=text department-app
     - coverage run -m unittest department-app/tests/
+    - coverage run -m pylint --load-plugins pylint_flask_sqlalchemy --ignore=venv,migrations department-app/
 after_success:
     - coveralls

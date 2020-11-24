@@ -58,5 +58,32 @@ def update_done_employee(id_: int):
     department = request.form.get("department_name")
     working_since = request.form.get("working_since")
     salary = request.form.get("salary")
-    es.update(id_, name, birthday, department, working_since, salary)
+    es.update(id_=id_, name=name, birthday=birthday, department=department,
+              working_since=working_since, salary=salary)
     return redirect(url_for("employee.show_employee", id_=id_))
+
+
+@employee_page.route("/employees/add", methods=["GET"])
+def add_employee():
+    """ Render page for adding a new employee. """
+    titles = ['Name', 'Birthday', 'In Department', 'Working Since', 'Salary']
+    return render_template('add_employee.html',
+                           title='Add employee',
+                           table_title='Adding new employee',
+                           headers=titles,
+                           departments=ds.get_all())
+
+
+@employee_page.route("/employees/add_done", methods=["POST"])
+def add_done_employee():
+    """ Adding a new employee. """
+    name = request.form.get("name")
+    birthday = request.form.get("birthday")
+    department = request.form.get("department")
+    working_since = request.form.get("working_since")
+    if not working_since:
+        working_since = None
+    salary = request.form.get("salary")
+    es.add(name=name, birthday=birthday, department=department,
+           working_since=working_since, salary=salary)
+    return redirect(url_for("employees.show_all_employees"))

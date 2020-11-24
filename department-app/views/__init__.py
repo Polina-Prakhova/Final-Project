@@ -1,13 +1,14 @@
+""" Creating Blueprints for views. """
 from flask import Blueprint
 
 
-template_folder = 'templates'
+TEMPLATE_FOLDER = 'templates'
 
 departments_page = Blueprint(
-    'departments', __name__, template_folder=template_folder)
+    'departments', __name__, template_folder=TEMPLATE_FOLDER)
 employees_page = Blueprint(
-    'employees', __name__, template_folder=template_folder)
+    'employees', __name__, template_folder=TEMPLATE_FOLDER)
 employee_page = Blueprint(
-    'employee', __name__, template_folder=template_folder)
+    'employee', __name__, template_folder=TEMPLATE_FOLDER)
 department_page = Blueprint(
-    'department', __name__, template_folder=template_folder)
+    'department', __name__, template_folder=TEMPLATE_FOLDER)

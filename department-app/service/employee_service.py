@@ -1,7 +1,5 @@
 from datetime import date
 
-from sqlalchemy.exc import IntegrityError
-
 from models.employee_model import Employee, db
 
 
@@ -31,14 +29,17 @@ def get(id_: int):
     return employee
 
 
-def add(employee: Employee):
+def add(name: str, birthday: date, department: int, working_since: date,
+        salary: float):
     """ Insert new employee. """
+    new_employee = Employee(name, birthday, salary, department, working_since)
     try:
-        db.session.add(employee)
+        db.session.add(new_employee)
     except Exception:
         db.session.rollback()
         raise
     db.session.commit()
+    return new_employee.id
 
 
 def update(id_: int, name: str, birthday: date, department: int,
@@ -65,6 +66,17 @@ def delete(id_: int):
     try:
         delete_employee = Employee.query.get(id_)
         db.session.delete(delete_employee)
+    except Exception:
+        db.session.rollback()
+        raise
+    db.session.commit()
+
+
+def delete_all():
+    try:
+        for e in get_all():
+            delete_employee = Employee.query.get(e.id)
+            db.session.delete(delete_employee)
     except Exception:
         db.session.rollback()
         raise

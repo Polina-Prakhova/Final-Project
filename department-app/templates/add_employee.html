@@ -1,0 +1,22 @@
+{% extends "base_table.html" %}
+
+{% block content %}
+<tr>
+    <form class="hidden" method="post" action="{{ url_for('employee.add_done_employee')}}">
+        <td><input type="text" id="name" name="name" value="" size="5" required></td>
+        <td><input type="date" id="birthday" name="birthday" value="" size="5" required></td>
+        <td>
+            <select name="department">
+                {% for d in departments %}
+                <option value="{{ d.id }}">{{ d.name }}</option>
+                {% endfor %}
+            </select>
+        </td>
+        <td><input type="date" id="working_since" name="working_since" value="" size="5"></td>
+        <td><input type="number" step="0.1" id="salary" name="salary" value="" size="5" required></td>
+        <td>
+            <button class="btn_sub">Submit</button>
+        </td>
+    </form>
+</tr>
+{% endblock %}

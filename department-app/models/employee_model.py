@@ -1,7 +1,8 @@
+""" Description of Employee table """
 from datetime import date
 
-from . import db
 from models.department_model import Department
+from . import db
 
 
 class Employee(db.Model):
@@ -21,13 +22,12 @@ class Employee(db.Model):
     working_since = db.Column(db.Date)
 
     def __init__(self, name: str, birthday: date, salary: float,
-                 department_id: int,
-                 working_since: date.today()):
+                 department_id: int, working_since: date = None):
         self.name = name
         self.birthday = birthday
-        self.salary = salary
         self.department_id = department_id
         self.working_since = working_since
+        self.salary = salary
 
     def __repr__(self):
         return f'<Employee {self.name} {self.birthday} {self.salary} >'
