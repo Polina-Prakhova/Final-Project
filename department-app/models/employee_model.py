@@ -29,5 +29,15 @@ class Employee(db.Model):
         self.working_since = working_since
         self.salary = salary
 
+    def __eq__(self, other):
+        if not isinstance(other, Employee):
+            return NotImplemented
+        return self.id == other.id \
+               and self.name == other.name \
+               and self.birthday == other.birthday \
+               and self.department_id == other.department_id \
+               and self.working_since == other.working_since \
+               and self.salary == other.salary
+
     def __repr__(self):
         return f'<Employee {self.name} {self.birthday} {self.salary} >'

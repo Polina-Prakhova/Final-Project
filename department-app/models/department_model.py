@@ -17,5 +17,14 @@ class Department(db.Model):
         self.name = name
         self.email = email
 
+    def __eq__(self, other):
+        if not isinstance(other, Department):
+            return NotImplemented
+        return self.id == other.id \
+               and self.name == other.name \
+               and self.avg_salary == other.avg_salary \
+               and self.count_employees == other.count_employees \
+               and self.email == other.email
+
     def __repr__(self):
         return '<Department %r>' % self.name

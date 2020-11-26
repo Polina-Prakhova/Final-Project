@@ -29,6 +29,20 @@ def get(id_: int):
     return employee
 
 
+def get_by_name(name: str):
+    """ Get employee by name. """
+    try:
+        q = db.session.query(Employee)
+        employee = q.filter(
+            Employee.name == name
+        ).scalar()
+    except Exception:
+        db.session.rollback()
+        raise
+    db.session.commit()
+    return employee
+
+
 def add(name: str, birthday: date, department: int, working_since: date,
         salary: float):
     """ Insert new employee. """

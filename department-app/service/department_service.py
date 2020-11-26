@@ -10,7 +10,7 @@ def get_all():
         q = db.session.query(Department)
         departments = q.all()
         for dep in departments:
-            update_salary_and_employees(dep.id)
+            __update_salary_and_employees(dep.id)
     except Exception:
         db.session.rollback()
         raise
@@ -32,6 +32,20 @@ def get(id_: int):
     return department
 
 
+def get_by_name(name: str):
+    """ Get department by name. """
+    try:
+        q = db.session.query(Department)
+        department = q.filter(
+            Department.name == name
+        ).scalar()
+    except Exception:
+        db.session.rollback()
+        raise
+    db.session.commit()
+    return department
+
+
 def add(name: str, email: str = None):
     """ Insert new department. """
     new_department = Department(name, email)
@@ -44,7 +58,7 @@ def add(name: str, email: str = None):
     return new_department.id
 
 
-def update(id_: int, name: str, email: str):
+def update(id_: int, name: str, email: str = ''):
     """ Update existing department. """
     try:
         q = db.session.query(Department)
@@ -73,7 +87,19 @@ def delete(id_: int):
     db.session.commit()
 
 
-def update_salary_and_employees(id_: int):
+def delete_all():
+    """ Delete all departments. """
+    try:
+        for d in get_all():
+            delete_department = Department.query.get(d.id)
+            db.session.delete(delete_department)
+    except Exception:
+        db.session.rollback()
+        raise
+    db.session.commit()
+
+
+def __update_salary_and_employees(id_: int):
     """ Recalculate fields avg_salary and count_employees in Department
     after adding new employee."""
     try:

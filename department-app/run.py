@@ -1,6 +1,7 @@
 """ Run file"""
+from sqlalchemy_utils import create_database, database_exists
 from flask import Flask
-from flask_migrate import MigrateCommand
+from flask_migrate import MigrateCommand, Migrate
 from flask_script import Manager
 from flask_restful import Api
 
@@ -19,13 +20,15 @@ def create_app():
 
     db.init_app(application)
 
-    #   with application.app_context():
-    #       db.create_all()
-
-    # migrate = Migrate(application, db)
-
+    migrate = Migrate(application, db)
     manager = Manager(application)
     manager.add_command('db', MigrateCommand)
+
+    if not database_exists(application.config['SQLALCHEMY_DATABASE_URI']):
+        create_database(application.config['SQLALCHEMY_DATABASE_URI'])
+
+    with application.app_context():
+        db.create_all()
 
     application.register_blueprint(departments_view.departments_page)
     application.register_blueprint(employees_view.employees_page)

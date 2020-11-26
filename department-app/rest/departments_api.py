@@ -1,5 +1,5 @@
 """ REST API methods for Department table"""
-from flask_restful import Resource, fields, marshal_with, reqparse
+from flask_restful import Resource, fields, marshal_with, reqparse, abort
 
 from service import department_service as ds
 
@@ -42,16 +42,19 @@ class DepartmentsAPI(Resource):
     @staticmethod
     def put():
         """ PUT method, doesn't relate to this collection. """
-        return 405
+        return abort(405)
 
 
 class DepartmentAPI(Resource):
     @staticmethod
     @marshal_with(department_fields)
-    def get(id_=None):
+    def get(id_):
         """ GET method, returns certain department by id. """
         department = ds.get(id_)
-        return department, 200
+        if not department:
+            return abort(404)
+        else:
+            return department, 200
 
     @staticmethod
     @marshal_with(department_fields)
@@ -59,15 +62,15 @@ class DepartmentAPI(Resource):
         """ PUT method, updates existing department by id. """
         args = department_args.parse_args()
         ds.update(id_, name=args['name'], email=args['email'])
-        return ds.get(id_), 201
+        return ds.get(id_), 200
 
     @staticmethod
     def delete(id_=None):
         """ DELETE method, deletes certain department by id. """
         ds.delete(id_)
-        return '', 200
+        return '', 204
 
     @staticmethod
-    def post():
+    def post(id_=None):
         """ POST method, doesn't relate to certain department. """
-        return 405
+        return abort(405)

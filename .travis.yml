@@ -8,7 +8,7 @@ install:
     - pip install pylint_flask_sqlalchemy
     - pip install -r requirements.txt
 script:
-    - coverage run -m unittest department-app/tests/
+    - coverage run -m unittest discover department-app/tests
     - coverage run -m pylint --load-plugins pylint_flask_sqlalchemy --ignore=venv,migrations department-app/
 after_success:
     - coveralls

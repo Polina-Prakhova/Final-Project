@@ -1,5 +1,5 @@
 """ REST API methods for Employee table"""
-from flask_restful import Resource, fields, marshal_with, reqparse, inputs
+from flask_restful import Resource, fields, marshal_with, reqparse, abort
 
 from service import employee_service as es
 
@@ -9,12 +9,17 @@ class Department(fields.Raw):
         return value.id
 
 
+class Date(fields.Raw):
+    def format(self, value):
+        return str(value)
+
+
 employee_fields = {
     'id': fields.Integer,
     'name': fields.String,
-    'birthday': fields.DateTime(dt_format='iso8601'),
+    'birthday': Date,
     'department': Department,
-    'working_since': fields.DateTime(dt_format='iso8601'),
+    'working_since': Date,
     'salary': fields.Float
 }
 
@@ -25,7 +30,7 @@ employee_args.add_argument('name',
                            required=True)
 
 employee_args.add_argument('birthday',
-                           type=inputs.datetime_from_iso8601,
+                           type=str,
                            help="Employee's birthday is required",
                            required=True)
 
@@ -39,7 +44,7 @@ employee_args.add_argument('department',
                            help="Employee's department is required",
                            required=True)
 employee_args.add_argument('working_since',
-                           type=inputs.datetime_from_iso8601,
+                           type=str,
                            help="Date since employee working in department")
 
 
@@ -72,6 +77,11 @@ class EmployeesAPI(Resource):
         es.delete_all()
         return {'result': 'Deleted all'}, 200
 
+    @staticmethod
+    def put():
+        """ PUT method, doesn't relate to this collection. """
+        return abort(405)
+
 
 class EmployeeAPI(Resource):
     @staticmethod
@@ -79,6 +89,8 @@ class EmployeeAPI(Resource):
     def get(id_=None):
         """ GET method, returns certain employee by id. """
         employee = es.get(id_)
+        if not employee:
+            return abort(404)
         return employee, 200
 
     @staticmethod
@@ -92,15 +104,15 @@ class EmployeeAPI(Resource):
                   salary=args['salary'],
                   department=args['department'],
                   working_since=args['working_since'])
-        return es.get(id_), 201
+        return es.get(id_), 200
 
     @staticmethod
     def delete(id_=None):
         """ DELETE method, deletes certain employee by id. """
         es.delete(id_)
-        return {'result': 'Deleted'}, 200
+        return '', 204
 
     @staticmethod
-    def post():
+    def post(id_=None):
         """ POST method, doesn't relate to certain employee. """
-        return 405
+        return abort(405)
