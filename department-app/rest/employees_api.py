@@ -1,15 +1,26 @@
-""" REST API methods for Employee table"""
+""" REST API methods for Employee table. """
+import os
+import sys
+
 from flask_restful import Resource, fields, marshal_with, reqparse, abort
 
+current_path = os.path.dirname(os.path.abspath(__file__))
+ROOT_PATH = os.path.join(current_path, '..')
+sys.path.append(ROOT_PATH)
+
+# pylint: disable=wrong-import-position
 from service import employee_service as es
+# pylint: enable=wrong-import-position
 
 
 class Department(fields.Raw):
+    """ Custom field for values of type department in JSON. """
     def format(self, value):
         return value.id
 
 
 class Date(fields.Raw):
+    """ Custom field for values of type date in JSON. """
     def format(self, value):
         return str(value)
 
@@ -49,6 +60,10 @@ employee_args.add_argument('working_since',
 
 
 class EmployeesAPI(Resource):
+    """ REST API for list of employee model.
+    Can get by url /api/employees.
+    Includes GET, POST, DELETE and PUT methods."""
+
     @staticmethod
     @marshal_with(employee_fields)
     def get():
@@ -84,6 +99,10 @@ class EmployeesAPI(Resource):
 
 
 class EmployeeAPI(Resource):
+    """ REST API for employee model.
+    Can get by url /api/employee/<id>.
+    Includes GET, POST, DELETE and PUT methods."""
+
     @staticmethod
     @marshal_with(employee_fields)
     def get(id_=None):

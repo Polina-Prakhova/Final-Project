@@ -1,10 +1,19 @@
 """ Department view """
+import os
+import sys
+
 from flask import render_template, url_for, request
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
+current_path = os.path.dirname(os.path.abspath(__file__))
+ROOT_PATH = os.path.join(current_path, '..')
+sys.path.append(ROOT_PATH)
+
+# pylint: disable=wrong-import-position
 from service import department_service as ds
-from . import department_page
+from views import department_page
+# pylint: enable=wrong-import-position
 
 
 @department_page.route('/departments/<int:id_>', methods=['GET'])

@@ -1,12 +1,20 @@
 """ Employee view """
+import os
+import sys
+
 from flask import render_template, url_for, request
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
+current_path = os.path.dirname(os.path.abspath(__file__))
+ROOT_PATH = os.path.join(current_path, '..')
+sys.path.append(ROOT_PATH)
+
+# pylint: disable=wrong-import-position
 from service import employee_service as es
 from service import department_service as ds
-
-from . import employee_page
+from views import employee_page
+# pylint: enable=wrong-import-position
 
 
 @employee_page.route('/employees/<int:id_>', methods=['GET'])

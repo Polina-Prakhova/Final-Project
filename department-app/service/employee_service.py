@@ -6,8 +6,8 @@ from models.employee_model import Employee, db
 def get_all():
     """ Get all employees. """
     try:
-        q = db.session.query(Employee)
-        employees = q.all()
+        query = db.session.query(Employee)
+        employees = query.all()
     except Exception:
         db.session.rollback()
         raise
@@ -18,8 +18,8 @@ def get_all():
 def get(id_: int):
     """ Get employee by id. """
     try:
-        q = db.session.query(Employee)
-        employee = q.filter(
+        query = db.session.query(Employee)
+        employee = query.filter(
             Employee.id == id_
         ).scalar()
     except Exception:
@@ -32,8 +32,8 @@ def get(id_: int):
 def get_by_name(name: str):
     """ Get employee by name. """
     try:
-        q = db.session.query(Employee)
-        employee = q.filter(
+        query = db.session.query(Employee)
+        employee = query.filter(
             Employee.name == name
         ).scalar()
     except Exception:
@@ -60,8 +60,8 @@ def update(id_: int, name: str, birthday: date, department: int,
            working_since: date, salary: float):
     """ Update existing employee. """
     try:
-        q = db.session.query(Employee)
-        employee = q.filter(
+        query = db.session.query(Employee)
+        employee = query.filter(
             Employee.id == id_
         ).scalar()
         employee.name = name
@@ -88,8 +88,8 @@ def delete(id_: int):
 
 def delete_all():
     try:
-        for e in get_all():
-            delete_employee = Employee.query.get(e.id)
+        for employee in get_all():
+            delete_employee = Employee.query.get(employee.id)
             db.session.delete(delete_employee)
     except Exception:
         db.session.rollback()

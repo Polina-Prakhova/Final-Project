@@ -1,15 +1,19 @@
 """ Unittests for basic model functions. Checking Employee and Department
 models. """
 import unittest
-import sys
 from datetime import date
+import os
+import sys
 
+current_path = os.path.dirname(os.path.abspath(__file__))
+ROOT_PATH = os.path.join(current_path, '..')
+sys.path.append(ROOT_PATH)
+
+# pylint: disable=wrong-import-position
 from models import db
 from service import employee_service as es, department_service as ds
-
-sys.path.append("..")
-
 from run import create_app
+# pylint: enable=wrong-import-position
 
 
 class TestDB(unittest.TestCase):

@@ -1,10 +1,18 @@
 """ Employees view """
+import os
+import sys
 from datetime import date
 
 from flask import render_template, request
 
+current_path = os.path.dirname(os.path.abspath(__file__))
+ROOT_PATH = os.path.join(current_path, '..')
+sys.path.append(ROOT_PATH)
+
+# pylint: disable=wrong-import-position
 from service import employee_service as es
-from . import employees_page
+from views import employees_page
+# pylint: enable=wrong-import-position
 
 
 @employees_page.route('/employees', methods=['GET'])

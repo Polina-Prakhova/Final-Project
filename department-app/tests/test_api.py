@@ -1,15 +1,19 @@
 """ Unittests for basic REST API functions. """
-import unittest
+import os
 import sys
+import unittest
 from datetime import date
 import json
 
-from models import db
+current_path = os.path.dirname(os.path.abspath(__file__))
+ROOT_PATH = os.path.join(current_path, '..')
+sys.path.append(ROOT_PATH)
+
+# pylint: disable=wrong-import-position
 from service import employee_service as es, department_service as ds
-
-sys.path.append("..")
-
+from models import db
 from run import create_app
+# pylint: enable=wrong-import-position
 
 
 class TestDB(unittest.TestCase):
@@ -42,16 +46,17 @@ class TestDB(unittest.TestCase):
                    working_since=date(2020, 1, 13), salary=30000.0)
 
     def tearDown(self) -> None:
+        """ Method runs after every test. Remove data from database. """
         with self.app.app_context():
             db.drop_all()
             db.create_all()
 
     @staticmethod
-    def date_encoder(o):
-        if isinstance(o, date):
-            return o.__str__()
-        else:
-            return o
+    def date_encoder(value):
+        """ Encoder for date object. """
+        if isinstance(value, date):
+            return value.__str__()
+        return value
 
     def test_status_code_check(self):
         """ Tests if server is running and returning HTTP code 200. """

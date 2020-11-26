@@ -7,8 +7,8 @@ from models.employee_model import Employee
 def get_all():
     """ Get all departments. """
     try:
-        q = db.session.query(Department)
-        departments = q.all()
+        query = db.session.query(Department)
+        departments = query.all()
         for dep in departments:
             __update_salary_and_employees(dep.id)
     except Exception:
@@ -21,8 +21,8 @@ def get_all():
 def get(id_: int):
     """ Get department by id. """
     try:
-        q = db.session.query(Department)
-        department = q.filter(
+        query = db.session.query(Department)
+        department = query.filter(
             Department.id == id_
         ).scalar()
     except Exception:
@@ -35,8 +35,8 @@ def get(id_: int):
 def get_by_name(name: str):
     """ Get department by name. """
     try:
-        q = db.session.query(Department)
-        department = q.filter(
+        query = db.session.query(Department)
+        department = query.filter(
             Department.name == name
         ).scalar()
     except Exception:
@@ -61,8 +61,8 @@ def add(name: str, email: str = None):
 def update(id_: int, name: str, email: str = ''):
     """ Update existing department. """
     try:
-        q = db.session.query(Department)
-        department = q.filter(
+        query = db.session.query(Department)
+        department = query.filter(
             Department.id == id_
         ).scalar()
         department.name = name
@@ -76,8 +76,8 @@ def update(id_: int, name: str, email: str = ''):
 def delete(id_: int):
     """ Delete department by id. """
     try:
-        q = db.session.query(Department)
-        delete_department = q.filter(
+        query = db.session.query(Department)
+        delete_department = query.filter(
             Department.id == id_
         ).scalar()
         db.session.delete(delete_department)
@@ -90,8 +90,8 @@ def delete(id_: int):
 def delete_all():
     """ Delete all departments. """
     try:
-        for d in get_all():
-            delete_department = Department.query.get(d.id)
+        for department in get_all():
+            delete_department = Department.query.get(department.id)
             db.session.delete(delete_department)
     except Exception:
         db.session.rollback()

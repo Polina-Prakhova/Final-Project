@@ -1,7 +1,16 @@
 """ REST API methods for Department table"""
+import os
+import sys
+
 from flask_restful import Resource, fields, marshal_with, reqparse, abort
 
+current_path = os.path.dirname(os.path.abspath(__file__))
+ROOT_PATH = os.path.join(current_path, '..')
+sys.path.append(ROOT_PATH)
+
+# pylint: disable=wrong-import-position
 from service import department_service as ds
+# pylint: enable=wrong-import-position
 
 department_fields = {
     'id': fields.Integer,
@@ -23,6 +32,10 @@ department_args.add_argument('email',
 
 
 class DepartmentsAPI(Resource):
+    """ REST API for list of department model.
+    Can get by url /api/departments.
+    Includes GET, POST, DELETE and PUT methods."""
+
     @staticmethod
     @marshal_with(department_fields)
     def get():
@@ -46,6 +59,10 @@ class DepartmentsAPI(Resource):
 
 
 class DepartmentAPI(Resource):
+    """ REST API for department model.
+    Can get by url /api/department/<id>.
+    Includes GET, POST, DELETE and PUT methods."""
+
     @staticmethod
     @marshal_with(department_fields)
     def get(id_):
@@ -53,8 +70,7 @@ class DepartmentAPI(Resource):
         department = ds.get(id_)
         if not department:
             return abort(404)
-        else:
-            return department, 200
+        return department, 200
 
     @staticmethod
     @marshal_with(department_fields)
