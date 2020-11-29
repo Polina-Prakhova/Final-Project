@@ -1,4 +1,5 @@
-""" Description of Employee table """
+""" Description of Employees table """
+import logging
 from datetime import date
 import os
 import sys
@@ -12,9 +13,11 @@ from models.department_model import Department
 from models import db
 # pylint: enable=wrong-import-position
 
+logger = logging.getLogger('department_app.run')
+
 
 class Employee(db.Model):
-    """ Description of 'employees' table. """
+    """ Employees table. """
 
     __tablename__ = 'employees'
 
@@ -36,16 +39,24 @@ class Employee(db.Model):
         self.department_id = department_id
         self.working_since = working_since
         self.salary = salary
+        logger.debug('Created Employee instance. Employee name is %s, '
+                     'birthday = %s, department = %i, salary = %f, '
+                     'working since %s',
+                     self.name,
+                     self.birthday,
+                     self.department_id,
+                     self.salary,
+                     self.working_since)
 
-    def __eq__(self, other):
-        if not isinstance(other, Employee):
-            return NotImplemented
-        return self.id == other.id \
-               and self.name == other.name \
-               and self.birthday == other.birthday \
-               and self.department_id == other.department_id \
-               and self.working_since == other.working_since \
-               and self.salary == other.salary
+    # def __eq__(self, other):
+    #     if not isinstance(other, Employee):
+    #         return NotImplemented
+    #     return self.id == other.id \
+    #            and self.name == other.name \
+    #            and self.birthday == other.birthday \
+    #            and self.department_id == other.department_id \
+    #            and self.working_since == other.working_since \
+    #            and self.salary == other.salary
 
     def __repr__(self):
         return f'<Employee {self.name} {self.birthday} {self.salary} >'

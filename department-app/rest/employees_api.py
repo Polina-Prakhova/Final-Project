@@ -1,4 +1,5 @@
 """ REST API methods for Employee table. """
+import logging
 import os
 import sys
 
@@ -11,6 +12,8 @@ sys.path.append(ROOT_PATH)
 # pylint: disable=wrong-import-position
 from service import employee_service as es
 # pylint: enable=wrong-import-position
+
+logger = logging.getLogger('department_app.run')
 
 
 class Department(fields.Raw):
@@ -68,6 +71,8 @@ class EmployeesAPI(Resource):
     @marshal_with(employee_fields)
     def get():
         """ GET method, returns employee collection. """
+
+        logger.debug('Catch GET request by URL /api/employees.')
         employees = es.get_all()
         if not employees:
             return employees, 204
@@ -77,6 +82,8 @@ class EmployeesAPI(Resource):
     @marshal_with(employee_fields)
     def post():
         """ POST method, adds new employee. """
+
+        logger.debug('Catch POST request by URL /api/employees.')
         args = employee_args.parse_args()
         id_ = es.add(name=args['name'],
                      birthday=args['birthday'],
@@ -89,24 +96,30 @@ class EmployeesAPI(Resource):
     @staticmethod
     def delete():
         """ DELETE method, deletes all collection. """
+
+        logger.debug('Catch DELETE request by URL /api/employees.')
         es.delete_all()
         return {'result': 'Deleted all'}, 200
 
     @staticmethod
     def put():
         """ PUT method, doesn't relate to this collection. """
+
+        logger.debug('Catch PUT request by URL /api/employees.')
         return abort(405)
 
 
 class EmployeeAPI(Resource):
     """ REST API for employee model.
-    Can get by url /api/employee/<id>.
+    Can get by url /api/employees/<id>.
     Includes GET, POST, DELETE and PUT methods."""
 
     @staticmethod
     @marshal_with(employee_fields)
     def get(id_=None):
         """ GET method, returns certain employee by id. """
+
+        logger.debug('Catch GET request by URL /api/employees/%i.', id_)
         employee = es.get(id_)
         if not employee:
             return abort(404)
@@ -116,6 +129,8 @@ class EmployeeAPI(Resource):
     @marshal_with(employee_fields)
     def put(id_=None):
         """ PUT method, updates existing employee by id. """
+
+        logger.debug('Catch PUT request by URL /api/employees/%i.', id_)
         args = employee_args.parse_args()
         es.update(id_=id_,
                   name=args['name'],
@@ -128,10 +143,13 @@ class EmployeeAPI(Resource):
     @staticmethod
     def delete(id_=None):
         """ DELETE method, deletes certain employee by id. """
+        logger.debug('Catch DELETE request by URL /api/employees/%i.', id_)
+
         es.delete(id_)
         return '', 204
 
     @staticmethod
     def post(id_=None):
         """ POST method, doesn't relate to certain employee. """
+        logger.debug('Catch POST request by URL /api/employees/%i.', id_)
         return abort(405)

@@ -1,4 +1,5 @@
 """ REST API methods for Department table"""
+import logging
 import os
 import sys
 
@@ -11,6 +12,8 @@ sys.path.append(ROOT_PATH)
 # pylint: disable=wrong-import-position
 from service import department_service as ds
 # pylint: enable=wrong-import-position
+
+logger = logging.getLogger('department_app.run')
 
 department_fields = {
     'id': fields.Integer,
@@ -40,6 +43,8 @@ class DepartmentsAPI(Resource):
     @marshal_with(department_fields)
     def get():
         """ GET method, returns department collection. """
+
+        logger.debug('Catch GET request by URL /api/departments.')
         departments = ds.get_all()
         return departments
 
@@ -47,6 +52,8 @@ class DepartmentsAPI(Resource):
     @marshal_with(department_fields)
     def post():
         """ POST method, adds new department. """
+
+        logger.debug('Catch POST request by URL /api/departments.')
         args = department_args.parse_args()
         id_ = ds.add(name=args['name'], email=args['email'])
         created_department = ds.get(id_)
@@ -55,6 +62,8 @@ class DepartmentsAPI(Resource):
     @staticmethod
     def put():
         """ PUT method, doesn't relate to this collection. """
+
+        logger.debug('Catch PUT request by URL /api/departments.')
         return abort(405)
 
 
@@ -67,6 +76,8 @@ class DepartmentAPI(Resource):
     @marshal_with(department_fields)
     def get(id_):
         """ GET method, returns certain department by id. """
+
+        logger.debug('Catch GET request by URL /api/departments/%i.', id_)
         department = ds.get(id_)
         if not department:
             return abort(404)
@@ -76,6 +87,8 @@ class DepartmentAPI(Resource):
     @marshal_with(department_fields)
     def put(id_=None):
         """ PUT method, updates existing department by id. """
+
+        logger.debug('Catch PUT request by URL /api/departments/%i.', id_)
         args = department_args.parse_args()
         ds.update(id_, name=args['name'], email=args['email'])
         return ds.get(id_), 200
@@ -83,10 +96,14 @@ class DepartmentAPI(Resource):
     @staticmethod
     def delete(id_=None):
         """ DELETE method, deletes certain department by id. """
+
+        logger.debug('Catch DELETE request by URL /api/departments/%i.', id_)
         ds.delete(id_)
         return '', 204
 
     @staticmethod
     def post(id_=None):
         """ POST method, doesn't relate to certain department. """
+
+        logger.debug('Catch POST request by URL /api/departments/%i.', id_)
         return abort(405)

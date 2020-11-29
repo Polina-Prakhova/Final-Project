@@ -73,7 +73,7 @@ class TestDB(unittest.TestCase):
 
     def test_get_department(self):
         """ Test getting existing department from database. """
-        response = self.client.get(self.BASE + 'api/department/1')
+        response = self.client.get(self.BASE + 'api/departments/1')
         assert response.status_code == 200
         department = json.loads(response.get_data(as_text=True))
         self.assertEqual(department.get('name'), 'HR')
@@ -88,7 +88,7 @@ class TestDB(unittest.TestCase):
     def test_update_department(self):
         """ Test updating existing department. """
         data = dict(id=1, name='HR', email='')
-        response = self.client.put(self.BASE + 'api/department/1',
+        response = self.client.put(self.BASE + 'api/departments/1',
                                    data=json.dumps(data),
                                    content_type='application/json')
         assert response.status_code == 200
@@ -97,16 +97,14 @@ class TestDB(unittest.TestCase):
 
     def test_get_non_existing_department(self):
         """ Test getting non-existing departments from database. """
-        response = self.client.get(self.BASE + 'api/department/99999')
-        self.assertEqual(response.status_code, 404)
-        response = self.client.get(self.BASE + 'api/department')
+        response = self.client.get(self.BASE + 'api/departments/99999')
         self.assertEqual(response.status_code, 404)
 
     def test_delete_department(self):
         """ Test deleting existing department from database. """
         with self.app.app_context():
             es.delete(1)
-        response = self.client.delete(self.BASE + 'api/department/1')
+        response = self.client.delete(self.BASE + 'api/departments/1')
         self.assertEqual(response.status_code, 204)
 
     def test_add_employee(self):
@@ -124,7 +122,7 @@ class TestDB(unittest.TestCase):
 
     def test_get_employee(self):
         """ Test getting existing employee from database. """
-        response = self.client.get(self.BASE + 'api/employee/1')
+        response = self.client.get(self.BASE + 'api/employees/1')
         assert response.status_code == 200
         employee = json.loads(response.get_data(as_text=True))
         self.assertEqual(employee.get('name'), 'Mary')
@@ -144,7 +142,7 @@ class TestDB(unittest.TestCase):
                     salary=130000.0,
                     department=1,
                     working_since=date(2020, 1, 13))
-        response = self.client.put(self.BASE + 'api/employee/1',
+        response = self.client.put(self.BASE + 'api/employees/1',
                                    data=json.dumps(data,
                                                    default=self.date_encoder),
                                    content_type='application/json')
@@ -154,24 +152,22 @@ class TestDB(unittest.TestCase):
 
     def test_get_non_existing_employee(self):
         """ Test getting non-existing employee from database. """
-        response = self.client.get(self.BASE + 'api/employee/99999')
-        self.assertEqual(response.status_code, 404)
-        response = self.client.get(self.BASE + 'api/employee')
+        response = self.client.get(self.BASE + 'api/employees/99999')
         self.assertEqual(response.status_code, 404)
 
     def test_delete_employee(self):
         """ Test deleting existing employee from database. """
-        response = self.client.delete(self.BASE + 'api/employee/1')
+        response = self.client.delete(self.BASE + 'api/employees/1')
         self.assertEqual(response.status_code, 204)
 
     def test_must_return_method_not_allowed(self):
         """ Test checking right response status code for
         unacceptable HTTP methods. """
-        response = self.client.post(self.BASE + 'api/department/1')
+        response = self.client.post(self.BASE + 'api/departments/1')
         self.assertEqual(response.status_code, 405)
         response = self.client.put(self.BASE + 'api/departments')
         self.assertEqual(response.status_code, 405)
-        response = self.client.post(self.BASE + 'api/employee/1')
+        response = self.client.post(self.BASE + 'api/employees/1')
         self.assertEqual(response.status_code, 405)
         response = self.client.put(self.BASE + 'api/employees')
         self.assertEqual(response.status_code, 405)
