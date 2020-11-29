@@ -1,12 +1,22 @@
 {% extends "base_table.html" %}
 
 {% block content %}
-{% for employee in employees %}
 <tr>
+    <td>{{ employee.id }}</td>
     <td>{{ employee.name }}</td>
     <td>{{ employee.birthday }}</td>
-    <td>{{ employee.salary }}</td>
+    <td>{{ employee.department.name }}</td>
+    <td>{{ employee.working_since }}</td>
+    <td>{{ employee.salary }} $</td>
+    <td>
+        <form class="hidden" method="post" action="{{ url_for('employee.update_employee', id_=employee.id)}}">
+            <button class="btn_edit">Update</button>
+        </form>
+        <br>
+        <form class="hidden" method="post" action="{{ url_for('employee.delete_employee', id_=employee.id)}}">
+            <button class="btn_del">Delete</button>
+        </form>
+    </td>
 </tr>
-{% endfor %}
 {% endblock %}
 

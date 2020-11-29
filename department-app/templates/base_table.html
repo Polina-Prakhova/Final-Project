@@ -3,18 +3,23 @@
 <head>
     <title>{{ title }}</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="../static/styles.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
 <header>
     <div class="headerLink">
-        <a href="departments">Departments</a>
-        <a href="employees">Employees</a>
+        <a href="{{ url_for('department.show_all_departments')}}">Departments</a>
+        <a href="{{ url_for('employee.show_all_employees')}}">Employees</a>
     </div>
 </header>
+
+<h3>{{ table_title }}</h3>
+{% block search %}
+{% endblock %}
+{% block add %}
+{% endblock %}
 <div class="main">
-    <h3>{{ table_title }}</h3>
     <table>
         <tr>
             {% for header in headers %}

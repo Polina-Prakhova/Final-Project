@@ -1,5 +1,11 @@
 {% extends "base_table.html" %}
 
+{% block add %}
+<form class="hidden" method="get" action="{{ url_for('department.add_department')}}">
+    <button class="btn_add">Add department</button>
+</form>
+{% endblock %}
+
 {% block content %}
 {% for department in departments %}
 <tr>

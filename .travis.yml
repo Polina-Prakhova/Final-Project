@@ -3,11 +3,16 @@ sudo: false
 language: python
 python:
     - "3.8"
+services:
+    - mysql
+before_install:
+    - sudo mysql -e "CREATE DATABASE project; SHOW DATABASES; USE project;"
+    - echo "USE mysql;\nALTER USER 'root'@'localhost' IDENTIFIED BY 'root';\nFLUSH privileges;" | mysql -u root
 install:
-    - pip install pylint
     - pip install -r requirements.txt
+    - pip install -r requirements-dev.txt
 script:
-    - pylint --output-format=text department-app
-    - coverage run --source=department-app/tests test
-after_success:
+    - python -m pylint --fail-under=9 --load-plugins pylint_flask_sqlalchemy --ignore=venv,migrations department-app/
+    - coverage run --source=department-app/ -m unittest discover -s department-app/
+after_script:
     - coveralls

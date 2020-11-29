@@ -1,6 +1,4 @@
 */venv
 department-app/.idea/
-department-app/__pycache__/
-department-app/**/__pycache__/*
-department-app/views/__pycache__/*
-department-app/.coveralls.yml
+**/__pycache__/*
+/department-app/department_app.log

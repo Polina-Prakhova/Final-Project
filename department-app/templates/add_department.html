@@ -1,0 +1,13 @@
+{% extends "base_table.html" %}
+
+{% block content %}
+<tr>
+    <form class="hidden" method="post" action="{{ url_for('department.add_done_department')}}">
+        <td><input type="text" id="name" name="name" value="" required></td>
+        <td><input type="email" id="email" name="email" value=""></td>
+        <td>
+            <button class="btn_sub">Submit</button>
+        </td>
+    </form>
+</tr>
+{% endblock %}

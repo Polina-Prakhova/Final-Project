@@ -3,6 +3,14 @@ margin: 0;
 padding: 0;
 }
 
+h3 {
+    text-align: center;
+    color: white;
+    margin-top: 40px;
+    font-size: 40px;
+    font-weight: lighter;
+}
+
 header {
 	text-align: right;
 	background-color: #242b36;
@@ -10,9 +18,13 @@ header {
 	weight: 100%;
 }
 
-.headerLink {
-   	margin-right: 30px;
-}
+p {
+    text-align: center;
+    color: white;
+    margin-top: 40px;
+    font-size: 22px;
+    font-weight: lighter;
+    }
 
 .headerLink a {
 	background-color: #0f141c;
@@ -22,7 +34,6 @@ header {
    	font-size: 22px;
    	cursor: pointer;
    	display: inline-block;
-   	margin-right: 20px;
    	text-align: center;
    	line-height: 70px;
     transform: translate(-50%);
@@ -48,17 +59,16 @@ body {
 	background: #0f141c;
 }
 
+.search {
+    text-align:center;
+    color: white;
+    margin-top: 30px;
+}
+
 .main { 
 	display: flex;
   	align-items: center;
   	justify-content: center;
-}
-h3 {
-    text-align: center;
-    color: white;
-    margin-top: 40px;
-    font-size: 40px;
-    font-weight: lighter;
 }
 table a {
     color: white;
@@ -107,7 +117,7 @@ td {
     font-size: 20px;
 }
 
-.btn_edit, .btn_del {
+.btn_edit, .btn_del, .btn_sub, .btn_add {
 	background-color: #0f141c;
     color: #FFFFFF;
     margin-top: 10px;
@@ -119,9 +129,23 @@ td {
     font-size: 20px;
 }
 .btn_edit:hover {
-  background: #00a83d;
+    background: #00a83d;
 }
 
 .btn_del:hover {
-  background: #a10a0a;
+    background: #a10a0a;
+}
+
+.btn_sub:hover, .btn_add:hover {
+    color: black;
+    background: #81d9e3;
+}
+
+.btn_add {
+    background-color: #242b36;
+    position: absolute;
+    right: 0;
+    margin-right: 200px;
+    display: block;
+    width: 10%;
 }
