@@ -48,11 +48,11 @@ def show_employees_birthday():
     titles = []
     message = 'No results'
 
-    start_b = request.args.get('start')
-    end_b = request.args.get('end')
-    employees = es.find_by_birthday(start_b, end_b)
+    start = request.args.get('start')
+    end = request.args.get('end')
+    employees = es.find_by_birthday(start, end)
     logger.debug('Get employees with birthday between %s and %s. Amount = %i',
-                 start_b, end_b, len(employees))
+                 start, end, len(employees))
 
     if employees:
         titles = ['№', 'Name', 'Birthday', 'In Department']

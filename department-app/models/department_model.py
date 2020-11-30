@@ -8,7 +8,7 @@ ROOT_PATH = os.path.join(current_path, '..')
 sys.path.append(ROOT_PATH)
 
 # pylint: disable=wrong-import-position
-from models import db
+from models import db, employee_model
 # pylint: enable=wrong-import-position
 
 logger = logging.getLogger('department_app.run')
