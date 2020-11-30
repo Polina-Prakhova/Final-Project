@@ -18,7 +18,7 @@ from run import create_app
 
 class TestDB(unittest.TestCase):
     """ Test case for the CRUD methods."""
-    app = create_app()
+    app = create_app('config.TestingConfig')
 
     @classmethod
     def setUpClass(cls) -> None:

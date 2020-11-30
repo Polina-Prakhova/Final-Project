@@ -6,7 +6,7 @@
         <td><input type="text" id="name" name="name" value="" size="5" required></td>
         <td><input type="date" id="birthday" name="birthday" value="" size="5" required></td>
         <td>
-            <select name="department">
+            <select name="department" required>
                 {% for d in departments %}
                 <option value="{{ d.id }}">{{ d.name }}</option>
                 {% endfor %}

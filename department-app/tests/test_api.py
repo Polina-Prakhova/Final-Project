@@ -18,7 +18,7 @@ from run import create_app
 
 class TestDB(unittest.TestCase):
     """ Test case for the REST API."""
-    app = create_app()
+    app = create_app('config.TestingConfig')
     client = app.test_client()
     app.config['TESTING'] = True
     BASE = 'http://127.0.0.1:5000/'

@@ -35,14 +35,14 @@ def logging_configuration():
     log.addHandler(stream)
 
 
-def create_app():
+def create_app(config: str = 'config.DevelopmentConfig'):
     """ Setup before running. """
     logging_configuration()
 
     application = Flask(__name__)
     logger.debug('Created Flask instance.')
 
-    application.config.from_pyfile('config.py')
+    application.config.from_object(config)
     logger.debug('Set configuration parameters for the application. DB '
                  'host:port = %s:%s', application.config.get("DATABASE_HOST"),
                  application.config.get("DATABASE_PORT"))

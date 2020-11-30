@@ -3,13 +3,13 @@
 {% block search %}
 
 <div class="search">
-    <form action="{{ url_for('employees.show_employees_birthday', start=start_b, end=end_b)}}">
+    <form action="{{ url_for('employee.show_employees_birthday', start=start_b, end=end_b)}}">
         <label for="start_b">Find by birthday: between </label>
         <input type="date" id="start_b" name="start_b" value="{{ date }}">
         <label for="end_b"> and </label>
         <input type="date" id="end_b" name="end_b" value="{{ date }}">
         <button>Find</button>
-        <button formaction="{{ url_for('employees.show_all_employees')}}">Reset</button>
+        <button formaction="{{ url_for('employee.show_all_employees')}}">Reset</button>
     </form>
 </div>
 <p>{{ message }}</p>

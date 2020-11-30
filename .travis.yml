@@ -6,7 +6,7 @@ python:
 services:
     - mysql
 before_install:
-    - sudo mysql -e "CREATE DATABASE project; SHOW DATABASES; USE project;"
+    - sudo mysql -e "CREATE DATABASE testing_db; SHOW DATABASES; USE testing_db;"
     - echo "USE mysql;\nALTER USER 'root'@'localhost' IDENTIFIED BY 'root';\nFLUSH privileges;" | mysql -u root
 install:
     - pip install -r requirements.txt
