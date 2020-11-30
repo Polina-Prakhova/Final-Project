@@ -152,5 +152,5 @@ def find_by_birthday(start: date, end: date):
         raise
     db.session.commit()
     logger.info('Successfully retrieved all employees with birthday '
-                'between %s and %s.', start, end)
+                'between %s and %s (amount = %i).', start, end, len(employees))
     return employees

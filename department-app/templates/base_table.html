@@ -30,5 +30,32 @@
         {% endblock %}
     </table>
 </div>
+
+<script>
+    document.getElementById("delete").onclick = function () {
+        let form  = document.getElementById('delete_form');
+        if (confirm("After this action all employees from this department will be deleted too. Are you sure?")) {
+            form.submit();
+        } else {
+            event.preventDefault();
+        }
+    };
+
+    var today = new Date()
+    var day = today.getDate();
+    var month = today.getMonth()+1;
+    var year = today.getFullYear()-18;
+    if(day<10){
+        day='0'+day
+    }
+    if(month<10){
+        month='0'+month
+    }
+
+    today = year+'-'+month+'-'+day;
+    document.getElementById('birthday').setAttribute("max", today);
+    document.getElementById('start_b').setAttribute("max", today);
+    document.getElementById('end_b').setAttribute("max", today);
+</script>
 </body>
 </html>

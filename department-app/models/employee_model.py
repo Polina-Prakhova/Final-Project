@@ -28,7 +28,9 @@ class Employee(db.Model):
     department_id = db.Column(db.Integer,
                               db.ForeignKey('departments.id'),
                               nullable=False)
-    department = db.relationship('Department', backref='employees',
+    department = db.relationship('Department',
+                                 backref=db.backref(
+                                     'employees', cascade="all, delete-orphan"),
                                  primaryjoin=department_id == Department.id)
     working_since = db.Column(db.Date)
 

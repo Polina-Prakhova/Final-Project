@@ -3,6 +3,7 @@ import logging
 import os
 import sys
 
+from flask import request
 from flask_restful import Resource, fields, marshal_with, reqparse, abort
 
 current_path = os.path.dirname(os.path.abspath(__file__))
@@ -73,7 +74,14 @@ class EmployeesAPI(Resource):
         """ GET method, returns employee collection. """
 
         logger.debug('Catch GET request by URL /api/employees.')
-        employees = es.get_all()
+        args = request.args
+        if args:
+            start = args['start']
+            end = args['end']
+            logger.debug('Argument start is %s, end is %s.', start, end)
+            employees = es.find_by_birthday(start, end)
+        else:
+            employees = es.get_all()
         if not employees:
             return employees, 204
         return employees, 200

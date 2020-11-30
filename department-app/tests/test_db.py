@@ -18,7 +18,7 @@ from run import create_app
 
 class TestDB(unittest.TestCase):
     """ Test case for the CRUD methods."""
-    app = create_app()
+    app = create_app('config.TestingConfig')
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -134,6 +134,15 @@ class TestDB(unittest.TestCase):
             employee_id = es.get_by_name('Mary').id
             es.delete(employee_id)
             self.assertIsNone(es.get_by_name('Mary'))
+
+    def test_find_by_birthday(self):
+        """ Test finding all employees with birthday between received dates."""
+        with self.app.app_context():
+            employees = es.find_by_birthday(date(2000, 9, 1), date(2000, 9, 23))
+            self.assertEqual(1, len(employees))
+            employees = es.find_by_birthday(date(1990, 9, 1), date(1990, 9, 23))
+            self.assertEqual(0, len(employees))
+
 
 
 if __name__ == '__main__':

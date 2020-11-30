@@ -2,3 +2,4 @@
 department-app/.idea/
 **/__pycache__/*
 /department-app/department_app.log
+gunicorn.sock

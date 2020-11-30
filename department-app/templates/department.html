@@ -12,8 +12,8 @@
             <button class="btn_edit">Update</button>
         </form>
         <br>
-        <form class="hidden" method="post" action="{{ url_for('department.delete_department', id_=department.id)}}">
-            <button class="btn_del">Delete</button>
+        <form class="hidden" method="post" id="delete_form" action="{{ url_for('department.delete_department', id_=department.id)}}">
+            <button id="delete" class="btn_del">Delete</button>
         </form>
     </td>
 </tr>

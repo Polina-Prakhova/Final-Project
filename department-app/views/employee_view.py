@@ -39,7 +39,7 @@ def show_all_employees():
                            employees=employees)
 
 
-@employee_page.route('/employees/', methods=['GET'])
+@employee_page.route('/employees', methods=['GET'])
 def show_employees_birthday():
     """ Render template with the list of employees
     whose birthdays are in specific period. """
@@ -48,11 +48,11 @@ def show_employees_birthday():
     titles = []
     message = 'No results'
 
-    start_b = request.args.get('start_b')
-    end_b = request.args.get('end_b')
-    employees = es.find_by_birthday(start_b, end_b)
+    start = request.args.get('start')
+    end = request.args.get('end')
+    employees = es.find_by_birthday(start, end)
     logger.debug('Get employees with birthday between %s and %s. Amount = %i',
-                 start_b, end_b, len(employees))
+                 start, end, len(employees))
 
     if employees:
         titles = ['№', 'Name', 'Birthday', 'In Department']
@@ -74,6 +74,11 @@ def show_employee(id_: int):
     titles = ['№', 'Name', 'Birthday', 'In Department', 'Working Since',
               'Salary']
     employee = es.get(id_)
+
+    if not employee:
+        logger.error("Can't find employee with id %i", id_)
+        abort(404)
+
     logger.info('Got employee %s', employee.name)
     return render_template('employee.html',
                            title='Employee',
@@ -90,13 +95,13 @@ def delete_employee(id_: int):
     employee = es.get(id_)
 
     if not employee:
-        logger.error("Can't deleted employee %s", employee.name)
+        logger.error("Can't deleted employee with id %i", id_)
         abort(404)
 
     es.delete(id_)
     logger.info('Successfully deleted employee %s', employee.name)
 
-    return redirect(url_for("employees.show_all_employees"))
+    return redirect(url_for("employee.show_all_employees"))
 
 
 @employee_page.route("/employees/<int:id_>/update", methods=["GET", "POST"])
@@ -107,7 +112,7 @@ def update_employee(id_: int):
     employee = es.get(id_)
 
     if not employee:
-        logger.error("Can't get employee with id %i", id_)
+        logger.error("Can't update employee with id %i", id_)
         abort(404)
 
     titles = ['№', 'Name', 'Birthday', 'In Department', 'Working Since',
