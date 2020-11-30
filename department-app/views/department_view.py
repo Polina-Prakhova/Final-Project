@@ -45,7 +45,7 @@ def show_department(id_: int):
     titles = ['№', 'Name', 'Average Salary', 'Employees', 'E-mail']
     department = ds.get(id_)
     if not department:
-        logger.error("Can't find department with id %i", id_)
+        logger.error("Can't find employee with id %i", id_)
         abort(404)
 
     logger.info('Get department %s', department.name)
@@ -63,13 +63,13 @@ def delete_department(id_: int):
     department = ds.get(id_)
 
     if not department:
-        logger.error("Can't deleted department %s", department.name)
+        logger.error("Can't delete department with id %i", id_)
         abort(404)
 
     ds.delete(id_)
     logger.info('Successfully deleted department %s', department.name)
 
-    return redirect(url_for("departments.show_all_departments"))
+    return redirect(url_for("department.show_all_departments"))
 
 
 @department_page.route("/departments/<int:id_>/update", methods=["GET", "POST"])

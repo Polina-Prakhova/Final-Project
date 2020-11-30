@@ -172,6 +172,15 @@ class TestDB(unittest.TestCase):
         response = self.client.put(self.BASE + 'api/employees')
         self.assertEqual(response.status_code, 405)
 
+    def test_find_by_birthday(self):
+        """ Test finding all employees with birthday between received dates."""
+        response = self.client.get(
+            self.BASE + 'api/employees?start=2000-09-20&end=2000-09-23')
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get(
+            self.BASE + 'api/employees?start=1990-09-20&end=1990-09-23')
+        self.assertEqual(response.status_code, 204)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -27,7 +27,8 @@ def logging_configuration():
     stream.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter(
-        '%(asctime)s - %(levelname)s : %(message)s')
+        '[%(asctime)s] %(filename)s %(funcName)s:%(lineno)d - %(levelname)s: '
+        '%(message)s')
     log_file.setFormatter(formatter)
     stream.setFormatter(formatter)
 
