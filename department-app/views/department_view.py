@@ -4,7 +4,7 @@ import os
 import sys
 
 import sqlalchemy.exc
-from flask import render_template, url_for, request
+from flask import render_template, url_for, request, session, flash
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
@@ -114,6 +114,7 @@ def add_department():
     """ Render page for adding a new department. """
     logger.debug('Routed to /departments/add')
     titles = ['Name', 'E-mail']
+
     return render_template('add_department.html',
                            title='Add department',
                            table_title='Adding new department',
@@ -132,5 +133,10 @@ def add_done_department():
     except sqlalchemy.exc.IntegrityError as exception:
         logger.error('Can\'t add department with name %s and email %s. '
                      'Exception: %s', name, email, exception.orig)
+        session['name'] = name
+        session['email'] = email
+        flash(f'Department with name {name} already exists.')
+        return redirect(request.referrer)
+    except Exception:
         abort(404)
-    return redirect(url_for("department.show_all_departments"))
+    return redirect(url_for('department.show_all_departments'))

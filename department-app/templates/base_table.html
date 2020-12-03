@@ -19,6 +19,15 @@
 {% endblock %}
 {% block add %}
 {% endblock %}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <p class="flush">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
 <div class="main">
     <table>
         <tr>
