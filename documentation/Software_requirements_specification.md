@@ -19,7 +19,7 @@ IEEE. IEEE Std 830-1998 IEEE Recommended Practice for Software Requirements Spec
         <br>![system interface](./static/system.png)
         <br>The Web Administration System has three active actors and three cooperating system. The User/Admin or External Service accesses the "DepBoard" through the Nginx, which redirects request to Gunicorn. Gunicorn, in turn, refers to the application itself.<br>
         Since this is a data-centric product it will need somewhere to store the data. For that, a Database will be used. Web application accesses to Database in order to add, remove or fetch the data and return it to User or External Service, however in slightly different ways. User gets information via user interface, in tables. External Service sends requests to add, remove or get data and recieves answers in JSON format.
-    2. *Product functions*
+    2. *Product functions*<br>
         With the web application, the users will be able to search for information about departments and employees in it. The result presented in tables filled with data and links to more specific information about chosen row. When following this link user can look through data and manipulate with it. The update button allows change fields about an existing department or person. The delete button deletes chosen row from database. If user trying to delete department which has employees, all employees will be removed too. In order to prevent accidental deletion, the warning window will appear.<br>
         The employees page provide searching by birthday. The result of the search will be viewed either as a table or as a no-result message.
     3. *User characteristics*   
@@ -27,18 +27,18 @@ IEEE. IEEE Std 830-1998 IEEE Recommended Practice for Software Requirements Spec
     4. *Constraints, assumptions and dependencies*
         The Internet connection is a constraint for the application because it is a web service. If user wants to us UI, then he/she must have installed web browser. Also, the interface will most likely not be the same for on monitors of different resolutions. For correct working, user should enable javascript in the web browser.
 3. **Specific requirements**
-    1. External interface requirements
+    1. External interface requirements<br>
         ! - User Interfaces<br>
         - Hardware Interfaces<br>
             Since the web application does not have any designated hardware, it does not have any direct hardware interfaces. The hardware connection to the database server is managed by the underlying operating system on the mobile phone and the web server.
         - Software Interfaces<br>
-            As WSGI server application uses Gunicorn. The folder 'department-app' contains file 'wsgi.py' which is involved in runing WSGI server and config file in the root of project folder. To run Gunicorn needs to install 'pip gunicorn' and enter following command into terminal: 
-            '''bash
+            As WSGI server application uses Gunicorn. The folder `department-app` contains file `wsgi.py` which is involved in runing WSGI server and config file in the root of project folder. To run Gunicorn needs to install 'pip gunicorn' and enter following command into terminal: 
+            ```bash
             gunicorn -c gunicorn_config.py "department-app.wsgi:create_app()"
-            '''
+            ```
         - Communication Interfaces<br>
             The communication between the database and the application is implemented using the SQLAlchemy module in the program code.
-    2. Functional requirements
+    2. Functional requirements<br>
         This section includes the requirements that specify all the fundamental actions of the system.
         - User Class 1 - The User
             **Use case:** Get list of employees<br>
@@ -142,7 +142,7 @@ IEEE. IEEE Std 830-1998 IEEE Recommended Practice for Software Requirements Spec
             **Diagram**![use case user25](./static/user-case-25.png)<br>
             **Brief description**<br>
             The External Service sends HTTP requests to invalid URLs or sends JSON with wrong structure. Web service can't manage such cases and return error message with appropriate status code.<br><br>
-    3. Logical database requirement
+    3. Logical database requirement<br>
         All the data shall be stored in relational database, in this case, in MySQL. For each department, ID, name (unique), average salary in department, amount of employees, email address (optional) shall be stored in one table. For each employee, ID, name, birthday (yyyy-mm-dd), department id, salary and date since working (optional and format 'yyyy-mm-dd') shall be stored in table as well.<br>
         *Note: the file format and type may vary when the system is being developed.<br>
         ![database scheme](./static/database.png)
