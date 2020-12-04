@@ -3,7 +3,6 @@
 {% block content %}
 <tr>
     <form class="hidden" method="post" action="{{ url_for('employee.update_done_employee', id_=employee.id)}}">
-        <td>{{ employee.id }}</td>
         <td><input type="text" id="name" name="name" value="{{ employee.name }}" size="5" required></td>
         <td><input type="date" id="birthday" name="birthday" value="{{ employee.birthday }}" size="5", required></td>
         <td>

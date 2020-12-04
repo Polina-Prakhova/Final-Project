@@ -5,6 +5,8 @@ from datetime import date
 import os
 import sys
 
+from mysql.connector import IntegrityError
+
 current_path = os.path.dirname(os.path.abspath(__file__))
 ROOT_PATH = os.path.join(current_path, '..')
 sys.path.append(ROOT_PATH)
@@ -143,6 +145,36 @@ class TestDB(unittest.TestCase):
             employees = es.find_by_birthday(date(1990, 9, 1), date(1990, 9, 23))
             self.assertEqual(0, len(employees))
 
+    def test_get_employee_error(self):
+        """ Test getting IntegrityError passing invalid id for employee."""
+        with self.app.app_context():
+            with self.assertRaises(IntegrityError) as context:
+                es.get(1111)
+
+            self.assertEqual("Can't get employee with id 1111",
+                             str(context.exception))
+
+    def test_manipulate_department_error(self):
+        """ Test getting IntegrityError passing invalid id for department in
+        different functions."""
+        with self.app.app_context():
+            with self.assertRaises(IntegrityError) as context:
+                ds.get(1111)
+
+            self.assertEqual("Can't get department with id 1111",
+                             str(context.exception))
+
+            with self.assertRaises(IntegrityError) as context:
+                ds.delete(1111)
+
+            self.assertEqual("Can't delete department with id 1111",
+                             str(context.exception))
+
+            with self.assertRaises(IntegrityError) as context:
+                ds.update(1111, 'name', 'email')
+
+            self.assertEqual("Can't update department with id 1111",
+                             str(context.exception))
 
 
 if __name__ == '__main__':

@@ -4,6 +4,7 @@ import sys
 import unittest
 from datetime import date
 
+from mysql.connector import IntegrityError
 from werkzeug.exceptions import NotFound
 
 current_path = os.path.dirname(os.path.abspath(__file__))
@@ -94,9 +95,9 @@ class TestDB(unittest.TestCase):
         with self.app.app_context():
             try:
                 dv.show_department(111)
-            except NotFound:
-                pass
-            self.assertLogs("Can't find department with id 111", level='ERROR')
+            except IntegrityError:
+                self.assertLogs("An error occurred while retrieving department "
+                                "with id 111", level='ERROR')
 
     def test_render_template_employee_in_response_if_error(self):
         """ Tests if logs with level 'ERROR' have been created if there is no
@@ -104,9 +105,9 @@ class TestDB(unittest.TestCase):
         with self.app.app_context():
             try:
                 ev.show_employee(111)
-            except NotFound:
-                pass
-            self.assertLogs("Can't find employee with id 111", level='ERROR')
+            except IntegrityError:
+                self.assertLogs("Can't get employee with id 11",
+                                level='ERROR')
 
     def test_render_template_delete_department_if_success(self):
         """ Tests if was redirection after successful deleting. """
@@ -119,11 +120,12 @@ class TestDB(unittest.TestCase):
         """ Tests if logs with level 'ERROR' have been created if there is no
         department with received id. """
         with self.app.app_context():
-            try:
+            with self.assertRaises(IntegrityError) as context:
                 dv.delete_department(11)
-            except NotFound:
-                self.assertLogs("Can't delete department with id 11",
-                                level='ERROR')
+
+            self.assertEqual("Can't get department with id 11",
+                             str(context.exception))
+            self.assertLogs("Can't delete department with id 11", level='ERROR')
 
     def test_render_template_delete_employee_if_success(self):
         """ Tests if was redirection after successful deleting employee. """
@@ -135,11 +137,12 @@ class TestDB(unittest.TestCase):
         """ Tests if logs with level 'ERROR' have been created if there is no
         employee with received id. """
         with self.app.app_context():
-            try:
+            with self.assertRaises(IntegrityError) as context:
                 ev.delete_employee(11)
-            except NotFound:
-                self.assertLogs("Can't deleted employee with id 11",
-                                level='ERROR')
+
+            self.assertEqual("Can't get employee with id 11",
+                             str(context.exception))
+            self.assertLogs("Can't get employee with id 11", level='ERROR')
 
     def test_render_template_update_department_if_success(self):
         """ Tests if was rendered template edit_department.html after requesting
@@ -153,11 +156,12 @@ class TestDB(unittest.TestCase):
         """ Tests if logs with level 'ERROR' have been created if there is no
         department with received id. """
         with self.app.app_context():
-            try:
-                ev.update_employee(11)
-            except NotFound:
-                self.assertLogs("Can't update department with id 11",
-                                level='ERROR')
+            with self.assertRaises(IntegrityError) as context:
+                dv.update_department(11)
+
+            self.assertEqual("Can't get department with id 11",
+                             str(context.exception))
+            self.assertLogs("Can't get department with id 11", level='ERROR')
 
     def test_render_template_update_employee_if_success(self):
         """ Tests if was rendered template edit_employee.html after requesting
@@ -171,11 +175,12 @@ class TestDB(unittest.TestCase):
         """ Tests if logs with level 'ERROR' have been created if there is no
         employee with received id. """
         with self.app.app_context():
-            try:
+            with self.assertRaises(IntegrityError) as context:
                 ev.update_employee(11)
-            except NotFound:
-                self.assertLogs("Can't update employee with id 11",
-                                level='ERROR')
+
+            self.assertEqual("Can't get employee with id 11",
+                             str(context.exception))
+            self.assertLogs("Can't get employee with id 11", level='ERROR')
 
 
 if __name__ == '__main__':

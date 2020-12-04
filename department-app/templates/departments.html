@@ -9,7 +9,6 @@
 {% block content %}
 {% for department in departments %}
 <tr>
-    <td><a href="{{ url_for('department.show_department', id_=department.id)}}">{{ department.id }}</a></td>
     <td><a href="{{ url_for('department.show_department', id_=department.id)}}">{{ department.name }}</a></td>
     <td>{{ department.avg_salary }} $</td>
     <td>{{ department.count_employees }}</td>

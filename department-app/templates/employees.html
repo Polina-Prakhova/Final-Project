@@ -5,9 +5,9 @@
 <div class="search">
     <form action="{{ url_for('employee.show_employees_birthday', start=start, end=end)}}">
         <label for="start_b">Find by birthday: between </label>
-        <input type="date" id="start_b" name="start" value="{{ date }}">
+        <input type="date" id="start_b" name="start">
         <label for="end_b"> and </label>
-        <input type="date" id="end_b" name="end" value="{{ date }}">
+        <input type="date" id="end_b" name="end">
         <button>Find</button>
         <button formaction="{{ url_for('employee.show_all_employees')}}">Reset</button>
     </form>
@@ -24,7 +24,6 @@
 {% block content %}
 {% for employee in employees %}
 <tr>
-    <td>{{ employee.id }}</td>
     <td><a href="{{ url_for('employee.show_employee', id_=employee.id)}}">{{ employee.name }}</a></td>
     <td>{{ employee.birthday }}</td>
     <td>{{ employee.department.name }}</td>

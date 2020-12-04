@@ -28,8 +28,9 @@ def show_all_employees():
     """ Render template with the list of all employees. """
 
     logger.debug('Function show_all_employees(). Routed to /employees')
-    titles = ['№', 'Name', 'Birthday', 'In Department']
+    titles = ['Name', 'Birthday', 'In Department']
     employees = es.get_all()
+
     logger.info('Get list of employees, length = %i', len(employees))
     return render_template('employees.html',
                            title='Employees',
@@ -55,7 +56,7 @@ def show_employees_birthday():
                  start, end, len(employees))
 
     if employees:
-        titles = ['№', 'Name', 'Birthday', 'In Department']
+        titles = ['Name', 'Birthday', 'In Department']
         message = f'Find {len(employees)} employee(s)'
 
     return render_template('employees.html',
@@ -71,7 +72,7 @@ def show_employee(id_: int):
     """ Render template with the information of certain employee. """
 
     logger.debug('Routed to /employees/%i', id_)
-    titles = ['№', 'Name', 'Birthday', 'In Department', 'Working Since',
+    titles = ['Name', 'Birthday', 'In Department', 'Working Since',
               'Salary']
     employee = es.get(id_)
 
@@ -115,7 +116,7 @@ def update_employee(id_: int):
         logger.error("Can't update employee with id %i", id_)
         abort(404)
 
-    titles = ['№', 'Name', 'Birthday', 'In Department', 'Working Since',
+    titles = ['Name', 'Birthday', 'In Department', 'Working Since',
               'Salary']
     logger.info('Get employee %s', employee.name)
     return render_template('edit_employee.html',

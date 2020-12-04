@@ -4,6 +4,7 @@ import os
 import sys
 
 from flask_restful import Resource, fields, marshal_with, reqparse, abort
+from mysql.connector import IntegrityError
 
 current_path = os.path.dirname(os.path.abspath(__file__))
 ROOT_PATH = os.path.join(current_path, '..')
@@ -78,8 +79,9 @@ class DepartmentAPI(Resource):
         """ GET method, returns certain department by id. """
 
         logger.debug('Catch GET request by URL /api/departments/%i.', id_)
-        department = ds.get(id_)
-        if not department:
+        try:
+            department = ds.get(id_)
+        except IntegrityError:
             return abort(404)
         return department, 200
 

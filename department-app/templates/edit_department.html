@@ -3,7 +3,6 @@
 {% block content %}
 <tr>
     <form class="hidden" method="post" action="{{ url_for('department.update_done_department', id_=department.id)}}">
-        <td>{{ department.id }}</td>
         <td><input type="text" id="name" name="name" value="{{ department.name }}" size="5" required></td>
         <td>{{ department.avg_salary }}</td>
         <td>{{ department.count_employees }}</td>

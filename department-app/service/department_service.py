@@ -2,6 +2,7 @@
 import logging
 
 from sqlalchemy import func
+from mysql.connector import IntegrityError
 
 from models.department_model import Department, db
 from models.employee_model import Employee
@@ -35,11 +36,16 @@ def get(id_: int):
         department = query.filter(
             Department.id == id_
         ).scalar()
-    except Exception as exception:
+
+        if not department:
+            raise IntegrityError(f"Can't get department with id {id_}")
+
+    except IntegrityError as exception:
         logger.error('An error occurred while retrieving department with id %i.'
                      ' Exception: %s', id_, str(exception))
         db.session.rollback()
         raise
+
     db.session.commit()
     logger.info('Successfully retrieved department by id %i.', id_)
     return department
@@ -89,6 +95,8 @@ def update(id_: int, name: str, email: str = ''):
         department = query.filter(
             Department.id == id_
         ).scalar()
+        if not department:
+            raise IntegrityError(f"Can't update department with id {id_}")
         department.name = name
         department.email = email
     except Exception as exception:
@@ -108,6 +116,8 @@ def delete(id_: int):
         delete_department = query.filter(
             Department.id == id_
         ).scalar()
+        if not delete_department:
+            raise IntegrityError("Can't delete department with id 1111")
         db.session.delete(delete_department)
     except Exception as exception:
         logger.error('An error occurred while deleting department with id %i. '

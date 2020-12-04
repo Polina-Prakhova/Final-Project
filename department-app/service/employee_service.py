@@ -2,6 +2,8 @@
 import logging
 from datetime import date
 
+from mysql.connector import IntegrityError
+
 from models.employee_model import Employee, db
 
 logger = logging.getLogger('department_app.run')
@@ -31,7 +33,9 @@ def get(id_: int):
         employee = query.filter(
             Employee.id == id_
         ).scalar()
-    except Exception as exception:
+        if not employee:
+            raise IntegrityError(f"Can't get employee with id {id_}")
+    except IntegrityError as exception:
         logger.error('An error occurred while retrieving employee with id %i.'
                      ' Exception: %s', id_, str(exception))
         db.session.rollback()

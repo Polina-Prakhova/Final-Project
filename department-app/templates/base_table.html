@@ -17,17 +17,12 @@
 <h3>{{ table_title }}</h3>
 {% block search %}
 {% endblock %}
+
 {% block add %}
 {% endblock %}
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    {% for message in messages %}
-      <p class="flush">{{ message }}</p>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
+{% block flash %}
+{% endblock %}
 <div class="main">
     <table>
         <tr>
@@ -49,22 +44,25 @@
             event.preventDefault();
         }
     };
-
-    var today = new Date()
+</script>
+<script>
+    var today = new Date();
     var day = today.getDate();
     var month = today.getMonth()+1;
     var year = today.getFullYear()-18;
     if(day<10){
-        day='0'+day
+        day='0'+day;
     }
     if(month<10){
-        month='0'+month
+        month='0'+month;
     }
 
     today = year+'-'+month+'-'+day;
-    document.getElementById('birthday').setAttribute("max", today);
     document.getElementById('start_b').setAttribute("max", today);
     document.getElementById('end_b').setAttribute("max", today);
+</script>
+<script>
+    document.getElementById('birthday').setAttribute("max", today);
 </script>
 </body>
 </html>

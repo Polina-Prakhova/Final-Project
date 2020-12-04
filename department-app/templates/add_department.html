@@ -1,5 +1,15 @@
 {% extends "base_table.html" %}
 
+{% block flash %}
+    {% if get_flashed_messages() %}
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                  <p class="flush">{{ message }}</p>
+            {% endfor %}
+        {% endwith %}
+    {% endif %}
+{% endblock %}
+
 {% block content %}
 <tr>
     <form class="hidden" method="post" action="{{ url_for('department.add_done_department')}}">

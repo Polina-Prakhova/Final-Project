@@ -27,7 +27,7 @@ def show_all_departments():
     """ Render template with the list of all departments. """
 
     logger.debug('Function show_all_departments(). Routed to /departments')
-    titles = ['№', 'Name', 'Average Salary', 'Employees']
+    titles = ['Name', 'Average Salary', 'Employees']
     departments = ds.get_all()
     logger.info('Get list of departments, length is %i', len(departments))
     return render_template('departments.html',
@@ -42,7 +42,7 @@ def show_department(id_: int):
     """ Render template with the information of certain department. """
 
     logger.debug('Routed to /departments/%i', id_)
-    titles = ['№', 'Name', 'Average Salary', 'Employees', 'E-mail']
+    titles = ['Name', 'Average Salary', 'Employees', 'E-mail']
     department = ds.get(id_)
     if not department:
         logger.error("Can't find employee with id %i", id_)
@@ -82,7 +82,7 @@ def update_department(id_: int):
         logger.error("Can't get department with id %i", id_)
         abort(404)
 
-    titles = ['№', 'Name', 'Average Salary', 'Employees', 'E-mail']
+    titles = ['Name', 'Average Salary', 'Employees', 'E-mail']
     logger.info('Get department %s', department.name)
     return render_template('edit_department.html',
                            title='Update department',
