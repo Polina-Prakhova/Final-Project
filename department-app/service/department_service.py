@@ -2,7 +2,6 @@
 import logging
 
 from sqlalchemy import func
-from mysql.connector import IntegrityError
 
 from models.department_model import Department, db
 from models.employee_model import Employee
@@ -38,9 +37,9 @@ def get(id_: int):
         ).scalar()
 
         if not department:
-            raise IntegrityError(f"Can't get department with id {id_}")
+            raise Exception(f"Can't get department with id {id_}")
 
-    except IntegrityError as exception:
+    except Exception as exception:
         logger.error('An error occurred while retrieving department with id %i.'
                      ' Exception: %s', id_, str(exception))
         db.session.rollback()
@@ -59,6 +58,10 @@ def get_by_name(name: str):
         department = query.filter(
             Department.name == name
         ).scalar()
+
+        if not department:
+            raise Exception(f"Can't get department with name {name}")
+
     except Exception as exception:
         logger.error('An error occurred while retrieving department by name %s.'
                      ' Exception: %s', name, str(exception))
@@ -92,13 +95,10 @@ def update(id_: int, name: str, email: str = ''):
                  id_, name, email)
     try:
         query = db.session.query(Department)
-        department = query.filter(
-            Department.id == id_
-        ).scalar()
-        if not department:
-            raise IntegrityError(f"Can't update department with id {id_}")
-        department.name = name
-        department.email = email
+        if not query.filter(Department.id == id_).scalar():
+            raise Exception(f"Can't update department with id {id_}")
+        query.filter(Department.id == id_).\
+            update(dict(name=name, email=email))
     except Exception as exception:
         logger.error('An error occurred while updating department with id %i. '
                      'Exception: %s', id_, str(exception))
@@ -116,8 +116,10 @@ def delete(id_: int):
         delete_department = query.filter(
             Department.id == id_
         ).scalar()
+
         if not delete_department:
-            raise IntegrityError("Can't delete department with id 1111")
+            raise Exception(f"Can't delete department with id {id_}")
+
         db.session.delete(delete_department)
     except Exception as exception:
         logger.error('An error occurred while deleting department with id %i. '

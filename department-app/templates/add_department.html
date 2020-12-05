@@ -12,7 +12,7 @@
 
 {% block content %}
 <tr>
-    <form class="hidden" method="post" action="{{ url_for('department.add_done_department')}}">
+    <form class="hidden" method="post" action="{{ url_for('department.add_department')}}">
         <td><input type="text" id="name" name="name" value="{% if session['name'] %}  {{ session.pop('name') }}
         {% endif %}" required></td>
         <td><input type="email" id="email" name="email" value="{% if session['email'] %}  {{ session.pop('email') }}

@@ -4,7 +4,6 @@ import sys
 import unittest
 from datetime import date
 
-from mysql.connector import IntegrityError
 from werkzeug.exceptions import NotFound
 
 current_path = os.path.dirname(os.path.abspath(__file__))
@@ -91,23 +90,22 @@ class TestDB(unittest.TestCase):
 
     def test_render_template_department_in_response_if_error(self):
         """ Tests if logs with level 'ERROR' have been created if there is no
-        department with received id. """
+        department with received id and if raised exception is NotFound. """
         with self.app.app_context():
-            try:
+            with self.assertRaises(Exception):
                 dv.show_department(111)
-            except IntegrityError:
-                self.assertLogs("An error occurred while retrieving department "
-                                "with id 111", level='ERROR')
+
+            self.assertLogs("An error occurred while retrieving department "
+                            "with id 111", level='ERROR')
 
     def test_render_template_employee_in_response_if_error(self):
         """ Tests if logs with level 'ERROR' have been created if there is no
-        employee with received id. """
+        employee with received id and if raised exception is NotFound. """
         with self.app.app_context():
-            try:
+            with self.assertRaises(Exception):
                 ev.show_employee(111)
-            except IntegrityError:
-                self.assertLogs("Can't get employee with id 11",
-                                level='ERROR')
+
+            self.assertLogs("Can't get employee with id 111", level='ERROR')
 
     def test_render_template_delete_department_if_success(self):
         """ Tests if was redirection after successful deleting. """
@@ -118,13 +116,10 @@ class TestDB(unittest.TestCase):
 
     def test_render_template_delete_department_if_error(self):
         """ Tests if logs with level 'ERROR' have been created if there is no
-        department with received id. """
+        department with received id and if raised exception is NotFound. """
         with self.app.app_context():
-            with self.assertRaises(IntegrityError) as context:
+            with self.assertRaises(Exception):
                 dv.delete_department(11)
-
-            self.assertEqual("Can't get department with id 11",
-                             str(context.exception))
             self.assertLogs("Can't delete department with id 11", level='ERROR')
 
     def test_render_template_delete_employee_if_success(self):
@@ -135,13 +130,11 @@ class TestDB(unittest.TestCase):
 
     def test_render_template_delete_employee_if_error(self):
         """ Tests if logs with level 'ERROR' have been created if there is no
-        employee with received id. """
+        employee with received id and if raised exception is NotFound. """
         with self.app.app_context():
-            with self.assertRaises(IntegrityError) as context:
+            with self.assertRaises(Exception):
                 ev.delete_employee(11)
 
-            self.assertEqual("Can't get employee with id 11",
-                             str(context.exception))
             self.assertLogs("Can't get employee with id 11", level='ERROR')
 
     def test_render_template_update_department_if_success(self):
@@ -149,38 +142,93 @@ class TestDB(unittest.TestCase):
         to /departments/<id> page. Checks whether a html tag (name) is
         contained in response or not. """
         with self.app.app_context():
-            response = dv.update_department(1)
-            self.assertIn('Updating department: HR', response)
+            with self.app.test_request_context():
+                response = dv.update_department(1)
+                self.assertIn('Updating department: HR', response)
 
     def test_render_template_update_department_if_error(self):
         """ Tests if logs with level 'ERROR' have been created if there is no
-        department with received id. """
+        department with received id and if raised exception is NotFound. """
         with self.app.app_context():
-            with self.assertRaises(IntegrityError) as context:
-                dv.update_department(11)
-
-            self.assertEqual("Can't get department with id 11",
-                             str(context.exception))
-            self.assertLogs("Can't get department with id 11", level='ERROR')
+            with self.app.test_request_context():
+                with self.assertRaises(Exception):
+                    dv.update_department(11)
+                self.assertLogs("Can't get department with id 11", level='ERROR')
 
     def test_render_template_update_employee_if_success(self):
         """ Tests if was rendered template edit_employee.html after requesting
         to /employees/<id> page. Checks whether a html tag (name) is
         contained in response or not. """
         with self.app.app_context():
-            response = ev.update_employee(1)
-            self.assertIn('Updating employee: Mary', response)
+            with self.app.test_request_context():
+                response = ev.update_employee(1)
+                self.assertIn('Updating employee: Mary', response)
 
     def test_render_template_update_employee_if_error(self):
         """ Tests if logs with level 'ERROR' have been created if there is no
-        employee with received id. """
+        employee with received id and if raised exception is NotFound. """
         with self.app.app_context():
-            with self.assertRaises(IntegrityError) as context:
-                ev.update_employee(11)
+            with self.app.test_request_context():
+                with self.assertRaises(Exception):
+                    ev.update_employee(11)
 
-            self.assertEqual("Can't get employee with id 11",
-                             str(context.exception))
-            self.assertLogs("Can't get employee with id 11", level='ERROR')
+                self.assertLogs("Can't get employee with id 11", level='ERROR')
+
+    def test_method_post_update_department_success(self):
+        """ Tests if department was updated and getting right status code. """
+        new_name = 'IT'
+        with self.app.app_context():
+            with self.app.test_request_context(method='POST',
+                                               data={'name': new_name,
+                                                     'email': ''}):
+                response = dv.update_department(1)
+                self.assertEqual(response.status_code, 302)
+            self.assertEqual(ds.get(1).name, new_name)
+
+    def test_method_post_update_department_error(self):
+        """ Tests if raised exception is NotFound while department
+        updating was failed. """
+        new_name = 'IT'
+        with self.app.app_context():
+            ds.add(new_name)
+            with self.app.test_request_context(method='POST',
+                                               data={'name': new_name,
+                                                     'email': ''}):
+                with self.assertRaises(NotFound):
+                    dv.update_department(1)
+            d = ds.get(1)
+            self.assertNotEqual(d.name, new_name)
+
+    def test_method_post_update_employee_success(self):
+        """ Tests if employee was updated and getting right status code. """
+        new_name = 'Taras'
+        with self.app.app_context():
+            with self.app.test_request_context \
+                        (method='POST', data=dict(name=new_name,
+                                                  birthday=date(2000, 9, 22),
+                                                  department_name=1,
+                                                  working_since=date(2020, 1,
+                                                                     13),
+                                                  salary=30000.0)):
+                response = ev.update_employee(1)
+                self.assertEqual(response.status_code, 302)
+            self.assertEqual(es.get(1).name, new_name)
+
+    # def test_render_template_update_employee_if_error(self):
+    #     """ Tests if raised exception is NotFound while department
+    #     updating was failed. """
+    #     with self.app.app_context():
+    #         with self.app.test_request_context(method='POST',
+    #                                            data=dict(name='Mary',
+    #                                                      birthday=date(2000, 9,
+    #                                                                    22),
+    #                                                      department_name=int(1),
+    #                                                      working_since=date(
+    #                                                          2020, 1,
+    #                                                          13),
+    #                                                      salary=30000.0)):
+    #             with self.assertRaises(NotFound):
+    #                 ev.update_employee(111)
 
 
 if __name__ == '__main__':

@@ -152,8 +152,9 @@ class TestDB(unittest.TestCase):
 
     def test_get_non_existing_employee(self):
         """ Test getting non-existing employee from database. """
-        response = self.client.get(self.BASE + 'api/employees/99999')
-        self.assertEqual(response.status_code, 404)
+        with self.assertRaises(Exception):
+            response = self.client.get(self.BASE + 'api/employees/99999')
+            self.assertEqual(response.status_code, 404)
 
     def test_delete_employee(self):
         """ Test deleting existing employee from database. """
