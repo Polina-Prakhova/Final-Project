@@ -2,8 +2,6 @@
 import logging
 from datetime import date
 
-from mysql.connector import IntegrityError
-
 from models.employee_model import Employee, db
 
 logger = logging.getLogger('department_app.run')
@@ -34,8 +32,8 @@ def get(id_: int):
             Employee.id == id_
         ).scalar()
         if not employee:
-            raise IntegrityError(f"Can't get employee with id {id_}")
-    except IntegrityError as exception:
+            raise Exception(f"Can't get employee with id {id_}", )
+    except Exception as exception:
         logger.error('An error occurred while retrieving employee with id %i.'
                      ' Exception: %s', id_, str(exception))
         db.session.rollback()
@@ -80,23 +78,24 @@ def add(name: str, birthday: date, department: int, working_since: date,
     return new_employee.id
 
 
-def update(id_: int, name: str, birthday: date, department: int,
-           working_since: date, salary: float):
+def update(id_: int, name: str, birthday: date, department: int, salary: float,
+           working_since: date = None):
     """ Update existing employee. """
+    department = int(department)
     logger.debug('Updating employee with id %i, name %s, birthday %s, '
                  'department %i, salary %f and working since %s.',
                  id_, name, birthday, department, salary, working_since)
 
     try:
         query = db.session.query(Employee)
-        employee = query.filter(
-            Employee.id == id_
-        ).scalar()
-        employee.name = name
-        employee.birthday = birthday
-        employee.department_id = department
-        employee.working_since = working_since
-        employee.salary = salary
+        if not query.filter(Employee.id == id_).scalar():
+            raise Exception(f"Can't update employee with id {id_}")
+        query.filter(Employee.id == id_) \
+            .update(dict(name=name,
+                         birthday=birthday,
+                         department=department,
+                         working_since=working_since,
+                         salary=salary))
     except Exception as exception:
         logger.error('An error occurred while updating employee with id %i. '
                      'Exception: %s', id_, str(exception))

@@ -40,7 +40,7 @@ def show_all_employees():
                            employees=employees)
 
 
-@employee_page.route('/employees', methods=['GET'])
+@employee_page.route('/employees/search', methods=['GET'])
 def show_employees_birthday():
     """ Render template with the list of employees
     whose birthdays are in specific period. """
@@ -74,9 +74,11 @@ def show_employee(id_: int):
     logger.debug('Routed to /employees/%i', id_)
     titles = ['Name', 'Birthday', 'In Department', 'Working Since',
               'Salary']
-    employee = es.get(id_)
+    employee = None
 
-    if not employee:
+    try:
+        employee = es.get(id_)
+    except IntegrityError:
         logger.error("Can't find employee with id %i", id_)
         abort(404)
 
@@ -93,9 +95,11 @@ def delete_employee(id_: int):
     """ Delete an employee. """
 
     logger.debug('Routed to /employees/%i/delete', id_)
-    employee = es.get(id_)
+    employee = None
 
-    if not employee:
+    try:
+        employee = es.get(id_)
+    except IntegrityError:
         logger.error("Can't deleted employee with id %i", id_)
         abort(404)
 
@@ -108,11 +112,37 @@ def delete_employee(id_: int):
 @employee_page.route("/employees/<int:id_>/update", methods=["GET", "POST"])
 def update_employee(id_: int):
     """ Render page for editing an existing employee. """
-
     logger.debug('Routed to /employees/%i/update', id_)
-    employee = es.get(id_)
 
-    if not employee:
+    if request.method == 'POST':
+        name = request.form.get("name")
+        birthday = request.form.get("birthday")
+        department = request.form.get("department_name")
+        working_since = request.form.get("working_since")
+        salary = request.form.get("salary")
+        try:
+            es.update(id_=id_, name=name, birthday=birthday,
+                      department=department,
+                      working_since=working_since, salary=salary)
+        except IntegrityError as exception:
+            logger.error('Can\'t update employee with name %s, birthday %s, '
+                         'department %i, salary %f and working since %s. '
+                         'Exception: %s', name, birthday, department, salary,
+                         working_since, str(exception))
+            abort(404)
+        except Exception:
+            abort(404)
+
+        logger.info('Successfully updated employee with id {}. It\'s name %s, '
+                    'birthday %s, department %i, salary %f and '
+                    'working since %s. ',
+                    name, birthday, department, salary, working_since)
+        return redirect(url_for("employee.show_employee", id_=id_))
+
+    employee = None
+    try:
+        employee = es.get(id_)
+    except IntegrityError:
         logger.error("Can't update employee with id %i", id_)
         abort(404)
 
@@ -127,66 +157,38 @@ def update_employee(id_: int):
                            departments=ds.get_all())
 
 
-@employee_page.route("/employees/<int:id_>/update_done", methods=["POST"])
-def update_done_employee(id_: int):
-    """ Update an existing employee. """
-
-    logger.debug('Routed to /employees/%i/update_done', id_)
-    name = request.form.get("name")
-    birthday = request.form.get("birthday")
-    department = request.form.get("department_name")
-    working_since = request.form.get("working_since")
-    salary = request.form.get("salary")
-    try:
-        es.update(id_=id_, name=name, birthday=birthday, department=department,
-                  working_since=working_since, salary=salary)
-    except IntegrityError as exception:
-        logger.error('Can\'t update employee with name %s, birthday %s, '
-                     'department %i, salary %f and working since %s. '
-                     'Exception: %s', name, birthday, department, salary,
-                     working_since, exception.orig)
-        abort(404)
-
-    logger.info('Successfully updated employee with id {}. It\'s name %s, '
-                'birthday %s, department %i, salary %f and working since %s. ',
-                name, birthday, department, salary, working_since)
-    return redirect(url_for("employee.show_employee", id_=id_))
-
-
-@employee_page.route("/employees/add", methods=["GET"])
+@employee_page.route("/employees/add", methods=["GET", "POST"])
 def add_employee():
-    """ Render page for adding a new employee. """
+    """ Adding a new employee. """
     logger.debug('Routed to /employees/add')
+
+    if request.method == 'POST':
+        name = request.form.get("name")
+        birthday = request.form.get("birthday")
+        department = request.form.get("department")
+        working_since = request.form.get("working_since")
+        if not working_since:
+            working_since = None
+        salary = request.form.get("salary")
+        try:
+            es.add(name=name, birthday=birthday, department=department,
+                   working_since=working_since, salary=salary)
+        except IntegrityError as exception:
+            logger.error('Can\'t add employee with name %s, birthday %s, '
+                         'department %i, salary %f and working since %s. '
+                         'Exception: %s', name, birthday, department, salary,
+                         working_since, str(exception))
+            abort(404)
+
+        logger.debug(
+            'Successfully added new employee with name %s, birthday %s, '
+            'department %i, salary %f and working since %s.',
+            name, birthday, department, salary, working_since)
+        return redirect(url_for("employee.show_all_employees"))
+
     titles = ['Name', 'Birthday', 'In Department', 'Working Since', 'Salary']
     return render_template('add_employee.html',
                            title='Add employee',
                            table_title='Adding new employee',
                            headers=titles,
                            departments=ds.get_all())
-
-
-@employee_page.route("/employees/adding", methods=["POST"])
-def add_done_employee():
-    """ Adding a new employee. """
-    logger.debug('Routed to /employees/add_done')
-    name = request.form.get("name")
-    birthday = request.form.get("birthday")
-    department = request.form.get("department")
-    working_since = request.form.get("working_since")
-    if not working_since:
-        working_since = None
-    salary = request.form.get("salary")
-    try:
-        es.add(name=name, birthday=birthday, department=department,
-               working_since=working_since, salary=salary)
-    except IntegrityError as exception:
-        logger.error('Can\'t add employee with name %s, birthday %s, '
-                     'department %i, salary %f and working since %s. '
-                     'Exception: %s', name, birthday, department, salary,
-                     working_since, exception.orig)
-        abort(404)
-
-    logger.debug('Successfully added new employee with name %s, birthday %s, '
-                 'department %i, salary %f and working since %s.',
-                 name, birthday, department, salary, working_since)
-    return redirect(url_for("employee.show_all_employees"))

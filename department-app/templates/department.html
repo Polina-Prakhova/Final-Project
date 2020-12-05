@@ -7,7 +7,7 @@
     <td>{{ department.count_employees }}</td>
     <td>{{ department.email }}</td>
     <td>
-        <form class="hidden" method="post" action="{{ url_for('department.update_department', id_=department.id)}}">
+        <form class="hidden" method="get" action="{{ url_for('department.update_department', id_=department.id)}}">
             <button class="btn_edit">Update</button>
         </form>
         <br>

@@ -8,7 +8,7 @@
     <td>{{ employee.working_since }}</td>
     <td>{{ employee.salary }} $</td>
     <td>
-        <form class="hidden" method="post" action="{{ url_for('employee.update_employee', id_=employee.id)}}">
+        <form class="hidden" method="get" action="{{ url_for('employee.update_employee', id_=employee.id)}}">
             <button class="btn_edit">Update</button>
         </form>
         <br>

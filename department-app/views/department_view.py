@@ -3,7 +3,7 @@ import logging
 import os
 import sys
 
-import sqlalchemy.exc
+from sqlalchemy.exc import IntegrityError
 from flask import render_template, url_for, request, session, flash
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
@@ -43,8 +43,11 @@ def show_department(id_: int):
 
     logger.debug('Routed to /departments/%i', id_)
     titles = ['Name', 'Average Salary', 'Employees', 'E-mail']
-    department = ds.get(id_)
-    if not department:
+    department = None
+
+    try:
+        department = ds.get(id_)
+    except IntegrityError:
         logger.error("Can't find employee with id %i", id_)
         abort(404)
 
@@ -60,9 +63,11 @@ def show_department(id_: int):
 def delete_department(id_: int):
     """Delete an department."""
     logger.debug('Routed to /departments/%i/delete', id_)
-    department = ds.get(id_)
+    department = None
 
-    if not department:
+    try:
+        department = ds.get(id_)
+    except IntegrityError:
         logger.error("Can't delete department with id %i", id_)
         abort(404)
 
@@ -74,11 +79,27 @@ def delete_department(id_: int):
 
 @department_page.route("/departments/<int:id_>/update", methods=["GET", "POST"])
 def update_department(id_: int):
-    """ Render page for editing an existing department. """
+    """ Editing an existing department. """
     logger.debug('Routed to /departments/%i/update', id_)
-    department = ds.get(id_)
 
-    if not department:
+    if request.method == 'POST':
+        name = request.form.get("name")
+        email = request.form.get("email")
+        try:
+            ds.update(id_, name, email)
+        except IntegrityError as exception:
+            logger.error('Can\'t update department with name %s and email %s. '
+                         'Exception: %s', name, email, str(exception))
+            abort(404)
+        logger.info(
+            'Successfully updated department with id %i. It\'s name = %s, '
+            'email = %s', id_, name, email)
+        return redirect(url_for("department.show_department", id_=id_))
+
+    department = None
+    try:
+        department = ds.get(id_)
+    except IntegrityError:
         logger.error("Can't get department with id %i", id_)
         abort(404)
 
@@ -92,51 +113,33 @@ def update_department(id_: int):
                            department=department)
 
 
-@department_page.route("/departments/<int:id_>/update_done", methods=["POST"])
-def update_done_department(id_: int):
-    """ Update an existing department. """
-    logger.debug('Routed to /departments/%i/update_done', id_)
-    name = request.form.get("name")
-    email = request.form.get("email")
-    try:
-        ds.update(id_, name, email)
-    except sqlalchemy.exc.IntegrityError as exception:
-        logger.error('Can\'t update department with name %s and email %s. '
-                     'Exception: %s', name, email, exception.orig)
-        abort(404)
-    logger.info('Successfully updated department with id %i. It\'s name = %s, '
-                'email = %s', id_, name, email)
-    return redirect(url_for("department.show_department", id_=id_))
-
-
-@department_page.route("/departments/add", methods=["GET"])
+@department_page.route("/departments/add", methods=["GET", "POST"])
 def add_department():
-    """ Render page for adding a new department. """
+    """ Adding a new department. """
     logger.debug('Routed to /departments/add')
-    titles = ['Name', 'E-mail']
 
+    if request.method == 'POST':
+        name = request.form.get("name")
+        email = request.form.get("email")
+
+        try:
+            ds.add(name, email)
+        except IntegrityError as exception:
+            logger.error('Can\'t add department with name %s and email "%s". '
+                         'Exception: %s', name, email, str(exception))
+            session['name'] = name
+            session['email'] = email
+            flash(f'Department with name {name} already exists.')
+            return redirect(request.referrer)
+        except Exception as exception:
+            logger.error('Can\'t add department with name %s and email %s. '
+                         'Exception: %s', name, email, str(exception))
+            abort(404)
+        return redirect(url_for('department.show_all_departments'))
+
+    titles = ['Name', 'E-mail']
     return render_template('add_department.html',
                            title='Add department',
                            table_title='Adding new department',
                            headers=titles)
 
-
-@department_page.route("/departments/adding", methods=["POST"])
-def add_done_department():
-    """ Update an existing department. """
-    logger.debug('Routed to /departments/add_done')
-    name = request.form.get("name")
-    email = request.form.get("email")
-
-    try:
-        ds.add(name, email)
-    except sqlalchemy.exc.IntegrityError as exception:
-        logger.error('Can\'t add department with name %s and email %s. '
-                     'Exception: %s', name, email, exception.orig)
-        session['name'] = name
-        session['email'] = email
-        flash(f'Department with name {name} already exists.')
-        return redirect(request.referrer)
-    except Exception:
-        abort(404)
-    return redirect(url_for('department.show_all_departments'))
