@@ -7,7 +7,7 @@ project_path = os.path.join(current_path, 'department-app')
 
 command = gunicorn_path
 pythonpath = project_path
-bind = '127.0.0.1:8001'
+bind = 'localhost:8001'
 workers = cpu_count() * 2 + 1
 user = None
 
