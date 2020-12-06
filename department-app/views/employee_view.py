@@ -84,7 +84,7 @@ def show_employee(id_: int):
 
     logger.info('Got employee %s', employee.name)
     return render_template('employee.html',
-                           title='Employee',
+                           title=f'Employee {employee.name}',
                            table_title=f'Employee: {employee.name}',
                            headers=titles,
                            employee=employee)
@@ -117,9 +117,9 @@ def update_employee(id_: int):
     if request.method == 'POST':
         name = request.form.get("name")
         birthday = request.form.get("birthday")
-        department = request.form.get("department_name")
+        department = int(request.form.get("department_name"))
         working_since = request.form.get("working_since")
-        salary = request.form.get("salary")
+        salary = float(request.form.get("salary"))
         try:
             es.update(id_=id_, name=name, birthday=birthday,
                       department=department,
@@ -165,11 +165,11 @@ def add_employee():
     if request.method == 'POST':
         name = request.form.get("name")
         birthday = request.form.get("birthday")
-        department = request.form.get("department")
+        department = int(request.form.get("department"))
         working_since = request.form.get("working_since")
         if not working_since:
             working_since = None
-        salary = request.form.get("salary")
+        salary = float(request.form.get("salary"))
         try:
             es.add(name=name, birthday=birthday, department=department,
                    working_since=working_since, salary=salary)

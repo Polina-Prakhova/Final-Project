@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Update department</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../department-app/static/styles.css">
+</head>
+
+<body>
+<header>
+    <div class="headerLink">
+        <a href="departments.html">Departments</a>
+        <a href="employees.html">Employees</a>
+    </div>
+</header>
+
+<h3>Updating department: HR</h3>
+
+<div class="main">
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Average Salary</th>
+            <th>Employees</th>
+            <th>E-mail</th>
+        </tr>
+        <tr>
+            <form class="hidden" method="post" action="departments.html">
+                <td><input type="text" id="name" name="name" value="HR" size="5" required></td>
+                <td>1000.0 $</td>
+                <td>1</td>
+                <td><input type="text" id="email" name="email" value="hr@firma.com"></td>
+                <td>
+                    <button class="btn_sub">Submit</button>
+                </td>
+            </form>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
+ 
+ 

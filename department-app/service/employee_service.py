@@ -81,7 +81,6 @@ def add(name: str, birthday: date, department: int, working_since: date,
 def update(id_: int, name: str, birthday: date, department: int, salary: float,
            working_since: date = None):
     """ Update existing employee. """
-    department = int(department)
     logger.debug('Updating employee with id %i, name %s, birthday %s, '
                  'department %i, salary %f and working since %s.',
                  id_, name, birthday, department, salary, working_since)
@@ -93,7 +92,7 @@ def update(id_: int, name: str, birthday: date, department: int, salary: float,
         query.filter(Employee.id == id_) \
             .update(dict(name=name,
                          birthday=birthday,
-                         department=department,
+                         department_id=department,
                          working_since=working_since,
                          salary=salary))
     except Exception as exception:

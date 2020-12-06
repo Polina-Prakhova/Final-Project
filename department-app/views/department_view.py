@@ -53,7 +53,7 @@ def show_department(id_: int):
 
     logger.info('Get department %s', department.name)
     return render_template('department.html',
-                           title='Department',
+                           title=f'Department {department.name}',
                            table_title=f'Department: {department.name}',
                            headers=titles,
                            department=department)
@@ -85,12 +85,23 @@ def update_department(id_: int):
     if request.method == 'POST':
         name = request.form.get("name")
         email = request.form.get("email")
+
         try:
             ds.update(id_, name, email)
         except IntegrityError as exception:
             logger.error('Can\'t update department with name %s and email %s. '
                          'Exception: %s', name, email, str(exception))
+
+            session['name'] = name
+            session['email'] = email
+            flash(f'Department with name {name} already exists.')
+            return redirect(request.referrer)
+
+        except Exception as exception:
+            logger.error('Can\'t add department with name %s and email %s. '
+                         'Exception: %s', name, email, str(exception))
             abort(404)
+
         logger.info(
             'Successfully updated department with id %i. It\'s name = %s, '
             'email = %s', id_, name, email)

@@ -93,7 +93,7 @@ table {
   	width: 100%;
   	max-width: 1000px;
   	min-width: 400px;
-  	height: 320px;
+  	height: 300px;
   	border-collapse: collapse;
     border-style: hidden;
   	margin: 50px auto;
@@ -149,3 +149,4 @@ td {
     display: block;
     width: 10%;
 }
+
