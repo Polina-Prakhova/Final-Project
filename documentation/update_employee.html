@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Update employee</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../department-app/static/styles.css">
+</head>
+
+<body>
+<header>
+    <div class="headerLink">
+        <a href="departments.html">Departments</a>
+        <a href="employees.html">Employees</a>
+    </div>
+</header>
+
+<h3>Updating employee: Alice</h3>
+
+<div class="main">
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Birthday</th>
+            <th>In Department</th>
+            <th>Working Since</th>
+            <th>Salary</th>
+        </tr>
+        <tr>
+            <form class="hidden" method="post" action="employees.html">
+                <td><input type="text" id="name" name="name" value="Alice" size="5" required></td>
+                <td><input type="date" id="birthday" name="birthday" value="1999-09-02" size="5", required></td>
+                <td>
+                    <select name="department_name">
+                        <option>HR</option>
+                        <option>Development</option>
+                    </select>
+                </td>
+                <td><input type="date" id="working_since" name="working_since" value="2020-02-12" size="5">
+                </td>
+                <td><input type="number" step="0.1" id="salary" name="salary" value="1000.0" size="5" required>
+                </td>
+                <td>
+                    <button class="btn_sub">Submit</button>
+                </td>
+            </form>
+        </tr>
+    </table>
+</div>
+<script>
+    var today = new Date();
+    var day = today.getDate();
+    var month = today.getMonth()+1;
+    var year = today.getFullYear()-18;
+    if(day<10){
+        day='0'+day;
+    }
+    if(month<10){
+        month='0'+month;
+    }
+
+    today = year+'-'+month+'-'+day;
+    document.getElementById('start_b').setAttribute("max", today);
+    document.getElementById('end_b').setAttribute("max", today);
+</script>
+</body>
+</html>
+ 
+ 
+ 

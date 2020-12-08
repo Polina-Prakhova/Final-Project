@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Employees</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../department-app/static/styles.css">
+</head>
+
+<body>
+<header>
+    <div class="headerLink">
+        <a href="departments.html">Departments</a>
+        <a href="employees.html">Employees</a>
+    </div>
+</header>
+
+<h3>List of Employees</h3>
+
+<form class="hidden" method="get" action="add_employee.html">
+    <button class="btn_add">Add employee</button>
+</form>
+
+<div class="main">
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Birthday</th>
+            <th>In Department</th>
+        </tr>
+        <tr>
+            <td><a href="employee.html">Alice</a></td>
+            <td>1999-09-02</td>
+            <td>HR</td>
+        </tr>
+        <tr>
+            <td><a href="employee.html">John</a></td>
+            <td>1997-01-30</td>
+            <td>Development</td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    var today = new Date();
+    var day = today.getDate();
+    var month = today.getMonth()+1;
+    var year = today.getFullYear()-18;
+    if(day<10){
+        day='0'+day;
+    }
+    if(month<10){
+        month='0'+month;
+    }
+
+    today = year+'-'+month+'-'+day;
+    document.getElementById('start_b').setAttribute("max", today);
+    document.getElementById('end_b').setAttribute("max", today);
+</script>
+</body>
+</html>

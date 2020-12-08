@@ -12,7 +12,6 @@ class Config:
     DATABASE_PASSWORD = 'root'
     DATABASE_HOST = 'localhost'
     DATABASE_NAME = 'development_db'
-    DATABASE_PORT = '5432'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE = f'mysql+mysqlconnector://' \
                         f'{DATABASE_USER}:{DATABASE_PASSWORD}@' \

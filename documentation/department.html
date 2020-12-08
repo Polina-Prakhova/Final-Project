@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Department HR</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../department-app/static/styles.css">
+</head>
+
+<body>
+<header>
+    <div class="headerLink">
+        <a href="departments.html">Departments</a>
+        <a href="employees.html">Employees</a>
+    </div>
+</header>
+
+<h3>Department: HR</h3>
+
+<div class="main">
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Avarage Salary</th>
+            <th>Employees</th>
+            <th>E-mail</th>
+        </tr>
+        <tr>
+            <td>HR</td>
+            <td>1000.0 $</td>
+            <td>1</td>
+            <td>hr@firma.com</td>
+            <td>
+                <form class="hidden" method="get" action="update_department.html">
+                    <button class="btn_edit">Update</button>
+                </form>
+                <br>
+                <form class="hidden" method="post" id="delete_form" action="departments.html">
+                    <button id="delete" class="btn_del">Delete</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    document.getElementById("delete").onclick = function () {
+        let form  = document.getElementById('delete_form');
+        if (confirm("After this action all employees from this department will be deleted too. Are you sure?")) {
+            form.submit();
+        } else {
+            event.preventDefault();
+        }
+    };
+</script>
+</body>
+</html>
+ 

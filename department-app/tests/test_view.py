@@ -4,8 +4,6 @@ import sys
 import unittest
 from datetime import date
 
-from werkzeug.exceptions import NotFound
-
 current_path = os.path.dirname(os.path.abspath(__file__))
 ROOT_PATH = os.path.join(current_path, '..')
 sys.path.append(ROOT_PATH)
@@ -194,10 +192,10 @@ class TestDB(unittest.TestCase):
             with self.app.test_request_context(method='POST',
                                                data={'name': new_name,
                                                      'email': ''}):
-                with self.assertRaises(NotFound):
-                    dv.update_department(1)
-            d = ds.get(1)
-            self.assertNotEqual(d.name, new_name)
+                response = dv.update_department(1)
+            department = ds.get(1)
+            self.assertNotEqual(department.name, new_name)
+            self.assertEqual(response.status_code, 302)
 
     def test_method_post_update_employee_success(self):
         """ Tests if employee was updated and getting right status code. """
@@ -213,22 +211,6 @@ class TestDB(unittest.TestCase):
                 response = ev.update_employee(1)
                 self.assertEqual(response.status_code, 302)
             self.assertEqual(es.get(1).name, new_name)
-
-    # def test_render_template_update_employee_if_error(self):
-    #     """ Tests if raised exception is NotFound while department
-    #     updating was failed. """
-    #     with self.app.app_context():
-    #         with self.app.test_request_context(method='POST',
-    #                                            data=dict(name='Mary',
-    #                                                      birthday=date(2000, 9,
-    #                                                                    22),
-    #                                                      department_name=int(1),
-    #                                                      working_since=date(
-    #                                                          2020, 1,
-    #                                                          13),
-    #                                                      salary=30000.0)):
-    #             with self.assertRaises(NotFound):
-    #                 ev.update_employee(111)
 
 
 if __name__ == '__main__':
