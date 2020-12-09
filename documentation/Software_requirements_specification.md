@@ -28,7 +28,24 @@ IEEE. IEEE Std 830-1998 IEEE Recommended Practice for Software Requirements Spec
         The Internet connection is a constraint for the application because it is a web service. If user wants to us UI, then he/she must have installed web browser. Also, the interface will most likely not be the same for on monitors of different resolutions. For correct working, user should enable javascript in the web browser.
 3. **Specific requirements**
     1. External interface requirements<br>
-        ! - User Interfaces<br>
+        - User Interfaces<br>
+            The main page is a departments page. There are navigations buttons at the top right corner, at the center of the page located table with data and the add button to the right of it. Deparment names in the table are clickable and rediract to more detailed information about selected one.<br>
+            ![departments page](./static/UI_departments.png)<br>
+            The page for employees collection is the same, but also has a search field by birthday. User needs to enter period or just date in one of proposed date fields.<br>
+            ![employees page](./static/UI_employees.png)<br>
+            ![employees page with birthday filter](./static/UI_employees_birthday_success.png)<br>
+            ![employees page with birthday filter](./static/UI_employees_birthday_no.png)<br>
+            The add pages for departments and for employees look similar but with different fields.<br>
+            ![add department](./static/UI_departments_add.png)<br>
+            ![add employee](./static/UI_employees_add.png)<br>
+            When switching to a certain department or employee, a page opens with more detailed information, which is not shown on the main page. There are buttons for editing and deleting.<br>
+            ![more datailed information about department](./static/UI_departments_update.png)<br>
+            ![more datailed information about employee](./static/UI_employees_update.png)<br>
+            When trying to delete a department, a warning window will appear.<br>
+            ![delete department](./static/UI_departments_delete.png)<br>
+            Two identical departments cannot exist in database. The user is warned about this if he/she tries to create or rename to an already existing department.<br>
+            ![add existing department](./static/UI_departments_add_existing.png)<br>
+            
         - Hardware Interfaces<br>
             Since the web application does not have any designated hardware, it does not have any direct hardware interfaces. The hardware connection to the database server is managed by the underlying operating system on the mobile phone and the web server.
         - Software Interfaces<br>

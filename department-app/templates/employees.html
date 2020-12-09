@@ -5,11 +5,11 @@
 <div class="search">
     <form action="{{ url_for('employee.show_employees_birthday', start=start, end=end)}}">
         <label for="start_b">Find by birthday: between </label>
-        <input type="date" id="start_b" name="start">
+        <input type="date" id="start_b" name="start" value={% if start %} "{{ start }}" {% endif%}>
         <label for="end_b"> and </label>
-        <input type="date" id="end_b" name="end">
-        <button>Find</button>
-        <button formaction="{{ url_for('employee.show_all_employees')}}">Reset</button>
+        <input type="date" id="end_b" name="end" value={% if end %} "{{ end }}" {% endif%}>
+        <button class="btn_search">Find</button>
+        <button class="btn_search" formaction="{{ url_for('employee.show_all_employees')}}">Reset</button>
     </form>
 </div>
 <p>{{ message }}</p>
