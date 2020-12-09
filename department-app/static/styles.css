@@ -117,7 +117,7 @@ td {
     font-size: 20px;
 }
 
-.btn_edit, .btn_del, .btn_sub, .btn_add {
+.btn_edit, .btn_del, .btn_sub, .btn_add, .btn_search {
 	background-color: #0f141c;
     color: #FFFFFF;
     margin-top: 10px;
@@ -136,7 +136,7 @@ td {
     background: #a10a0a;
 }
 
-.btn_sub:hover, .btn_add:hover {
+.btn_search:hover, .btn_sub:hover, .btn_add:hover {
     color: black;
     background: #81d9e3;
 }
@@ -144,9 +144,19 @@ td {
 .btn_add {
     background-color: #242b36;
     position: absolute;
+    margin-top: 0px;
+    margin-bottom: 0px;
     right: 0;
     margin-right: 200px;
     display: block;
     width: 10%;
+}
+
+.btn_search {
+    background-color: #242b36;
+    font-size: 16px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    min-width: 90px;
 }
 

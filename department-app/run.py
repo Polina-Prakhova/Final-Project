@@ -9,8 +9,8 @@ from flask_restful import Api
 
 from views import employee_view, department_view
 from models import db
-from rest.departments_api import DepartmentsAPI, DepartmentAPI
-from rest.employees_api import EmployeeAPI, EmployeesAPI
+from rest.department_api import DepartmentsAPI, DepartmentAPI
+from rest.employee_api import EmployeeAPI, EmployeesAPI
 
 logger = logging.getLogger('department_app.run')
 
@@ -26,6 +26,9 @@ def logging_configuration():
     stream = logging.StreamHandler()
     stream.setLevel(logging.DEBUG)
 
+    sql_log = logging.getLogger('sqlalchemy.engine')
+    sql_log.setLevel(logging.ERROR)
+
     formatter = logging.Formatter(
         '[%(asctime)s] %(filename)s %(funcName)s:%(lineno)d - %(levelname)s: '
         '%(message)s')
@@ -34,6 +37,8 @@ def logging_configuration():
 
     log.addHandler(log_file)
     log.addHandler(stream)
+    sql_log.addHandler(stream)
+    sql_log.addHandler(log_file)
 
 
 def create_app(config: str = 'config.DevelopmentConfig'):

@@ -36,7 +36,6 @@ def show_all_employees():
                            title='Employees',
                            table_title='List of Employees',
                            headers=titles,
-                           date=date.today(),
                            employees=employees)
 
 
@@ -51,6 +50,10 @@ def show_employees_birthday():
 
     start = request.args.get('start')
     end = request.args.get('end')
+    if not end:
+        end = start
+    if not start:
+        start = end
     employees = es.find_by_birthday(start, end)
     logger.debug('Get employees with birthday between %s and %s. Amount = %i',
                  start, end, len(employees))
@@ -64,7 +67,9 @@ def show_employees_birthday():
                            table_title='List of Employees',
                            headers=titles,
                            message=message,
-                           employees=employees)
+                           employees=employees,
+                           start=start,
+                           end=end)
 
 
 @employee_page.route('/employees/<int:id_>', methods=['GET'])
@@ -119,6 +124,8 @@ def update_employee(id_: int):
         birthday = request.form.get("birthday")
         department = int(request.form.get("department_name"))
         working_since = request.form.get("working_since")
+        if not working_since:
+            working_since = None
         salary = float(request.form.get("salary"))
         try:
             es.update(id_=id_, name=name, birthday=birthday,
