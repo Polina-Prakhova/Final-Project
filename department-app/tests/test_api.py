@@ -87,11 +87,11 @@ class TestDB(unittest.TestCase):
 
     def test_update_department(self):
         """ Test updating existing department. """
-        data = dict(id=1, name='HR', email='')
+        data = dict(id=1, name='HR')
         response = self.client.put(self.BASE + 'api/departments/1',
                                    data=json.dumps(data),
                                    content_type='application/json')
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
         department = json.loads(response.get_data(as_text=True))
         self.assertNotEqual(department.get('email'), 'hr@firma.com')
 
@@ -123,14 +123,14 @@ class TestDB(unittest.TestCase):
     def test_get_employee(self):
         """ Test getting existing employee from database. """
         response = self.client.get(self.BASE + 'api/employees/1')
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
         employee = json.loads(response.get_data(as_text=True))
         self.assertEqual(employee.get('name'), 'Mary')
 
     def test_get_all_employees(self):
         """ Test getting all existing employees from database. """
         response = self.client.get(self.BASE + 'api/employees')
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
         employees = json.loads(response.get_data(as_text=True))
         self.assertEqual(len(employees), 1)
 
@@ -152,9 +152,8 @@ class TestDB(unittest.TestCase):
 
     def test_get_non_existing_employee(self):
         """ Test getting non-existing employee from database. """
-        with self.assertRaises(Exception):
-            response = self.client.get(self.BASE + 'api/employees/99999')
-            self.assertEqual(response.status_code, 404)
+        response = self.client.get(self.BASE + 'api/employees/99999')
+        self.assertEqual(response.status_code, 404)
 
     def test_delete_employee(self):
         """ Test deleting existing employee from database. """
@@ -175,11 +174,17 @@ class TestDB(unittest.TestCase):
 
     def test_find_by_birthday(self):
         """ Test finding all employees with birthday between received dates."""
-        response = self.client.get(
-            self.BASE + 'api/employees?start=2000-09-20&end=2000-09-23')
+        data = dict(start=date(2000, 9, 20), end=date(2000, 9, 23))
+        response = self.client.get(self.BASE + 'api/employees',
+                                   data=json.dumps(data,
+                                                   default=self.date_encoder),
+                                   content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        response = self.client.get(
-            self.BASE + 'api/employees?start=1990-09-20&end=1990-09-23')
+        data = dict(start=date(1999, 9, 20), end=date(1999, 9, 23))
+        response = self.client.get(self.BASE + 'api/employees',
+                                   data=json.dumps(data,
+                                                   default=self.date_encoder),
+                                   content_type='application/json')
         self.assertEqual(response.status_code, 204)
 
 

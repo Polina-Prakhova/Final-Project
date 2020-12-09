@@ -1,3 +1,4 @@
+""" Creating SQLAlchemy instance to work with database. """
 import logging
 
 from flask_sqlalchemy import SQLAlchemy
