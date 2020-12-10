@@ -1,4 +1,4 @@
-""" WSGI entry point. """
+""" WSGI entry point. Creates app and runs it. """
 import os
 import sys
 
@@ -10,6 +10,5 @@ from run import create_app
 # pylint: enable=wrong-import-position
 
 if __name__ == '__main__':
-    """ Creates app and runs it. """
     app = create_app()
     app.run()

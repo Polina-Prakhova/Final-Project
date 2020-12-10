@@ -5,7 +5,6 @@ import sys
 
 from flask import request
 from flask_restful import Resource, fields, marshal_with, reqparse, abort
-from mysql.connector import IntegrityError
 
 current_path = os.path.dirname(os.path.abspath(__file__))
 ROOT_PATH = os.path.join(current_path, '..')
@@ -13,6 +12,7 @@ sys.path.append(ROOT_PATH)
 
 # pylint: disable=wrong-import-position
 from service import employee_service as es
+
 # pylint: enable=wrong-import-position
 
 logger = logging.getLogger('department_app.run')
@@ -20,12 +20,14 @@ logger = logging.getLogger('department_app.run')
 
 class Department(fields.Raw):
     """ Custom field for values of type department in JSON. """
+
     def format(self, value):
         return value.id
 
 
 class Date(fields.Raw):
     """ Custom field for values of type date in JSON. """
+
     def format(self, value):
         return str(value)
 
@@ -61,7 +63,18 @@ employee_args.add_argument('department',
                            required=True)
 employee_args.add_argument('working_since',
                            type=str,
-                           help="Date since employee working in department")
+                           help="Date since employee working in department",
+                           default='')
+
+birthday_args = reqparse.RequestParser()
+birthday_args.add_argument('start', default=None)
+birthday_args.add_argument('end', default=None)
+
+
+@marshal_with(employee_fields)
+def marshal_employee(result):
+    """ Prepare result data to sending in JSON format."""
+    return result
 
 
 class EmployeesAPI(Resource):
@@ -70,37 +83,38 @@ class EmployeesAPI(Resource):
     Includes GET, POST, DELETE and PUT methods."""
 
     @staticmethod
-    @marshal_with(employee_fields)
     def get():
         """ GET method, returns employee collection. """
 
         logger.debug('Catch GET request by URL /api/employees.')
-        args = request.args
-        if args:
+        if request.get_json() is None:
+            employees = es.get_all()
+        else:
+            args = request.get_json()
             start = args['start']
             end = args['end']
             logger.debug('Argument start is %s, end is %s.', start, end)
             employees = es.find_by_birthday(start, end)
-        else:
-            employees = es.get_all()
         if not employees:
-            return employees, 204
-        return employees, 200
+            return '', 204
+        return marshal_employee(employees)
 
     @staticmethod
-    @marshal_with(employee_fields)
     def post():
         """ POST method, adds new employee. """
 
         logger.debug('Catch POST request by URL /api/employees.')
         args = employee_args.parse_args()
-        id_ = es.add(name=args['name'],
-                     birthday=args['birthday'],
-                     salary=args['salary'],
-                     department=args['department'],
-                     working_since=args['working_since'])
+        try:
+            id_ = es.add(name=args['name'],
+                         birthday=args['birthday'],
+                         salary=args['salary'],
+                         department=args['department'],
+                         working_since=args['working_since'])
+        except Exception:
+            return {'message': "Can't post employee."}, 404
 
-        return es.get(id_), 201
+        return marshal_employee(es.get(id_)), 201
 
     @staticmethod
     def delete():
@@ -108,7 +122,7 @@ class EmployeesAPI(Resource):
 
         logger.debug('Catch DELETE request by URL /api/employees.')
         es.delete_all()
-        return {'result': 'Deleted all'}, 200
+        return {'result': 'All employees was deleted.'}, 200
 
     @staticmethod
     def put():
@@ -124,31 +138,32 @@ class EmployeeAPI(Resource):
     Includes GET, POST, DELETE and PUT methods."""
 
     @staticmethod
-    @marshal_with(employee_fields)
     def get(id_=None):
         """ GET method, returns certain employee by id. """
 
         logger.debug('Catch GET request by URL /api/employees/%i.', id_)
         try:
             employee = es.get(id_)
-        except IntegrityError:
-            return abort(404)
-        return employee, 200
+        except Exception:
+            return {'message': f'Can\'t get employee with id {id_}.'}, 404
+        return marshal_employee(employee), 200
 
     @staticmethod
-    @marshal_with(employee_fields)
     def put(id_=None):
         """ PUT method, updates existing employee by id. """
 
         logger.debug('Catch PUT request by URL /api/employees/%i.', id_)
         args = employee_args.parse_args()
-        es.update(id_=id_,
-                  name=args['name'],
-                  birthday=args['birthday'],
-                  salary=args['salary'],
-                  department=args['department'],
-                  working_since=args['working_since'])
-        return es.get(id_), 200
+        try:
+            es.update(id_=id_,
+                      name=args['name'],
+                      birthday=args['birthday'],
+                      salary=args['salary'],
+                      department=args['department'],
+                      working_since=args['working_since'])
+        except Exception:
+            return {'message': 'Can\'t update employee.'}, 404
+        return marshal_employee(es.get(id_)), 200
 
     @staticmethod
     def delete(id_=None):

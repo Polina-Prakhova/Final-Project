@@ -176,6 +176,19 @@ class TestDB(unittest.TestCase):
             self.assertEqual("Can't update department with id 1111",
                              str(context.exception))
 
+    def test_show_employees_by_birthday(self):
+        """ Test getting list of employees with birthday between certain
+        dates."""
+        with self.app.app_context():
+            employees = es.find_by_birthday(
+                start=date(2000, 9, 20),
+                end=date(2000, 9, 23))
+            self.assertEqual(len(employees), 1)
+            employees = es.find_by_birthday(
+                start=date(2010, 9, 20),
+                end=date(2010, 9, 23))
+            self.assertEqual(len(employees), 0)
+
 
 if __name__ == '__main__':
     unittest.main()

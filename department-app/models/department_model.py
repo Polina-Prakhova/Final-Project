@@ -25,9 +25,9 @@ class Department(db.Model):
     count_employees = db.Column(db.Integer, nullable=False)
     email = db.Column(db.String(64))
 
-    def __init__(self, name: str, email: str = ''):
-        self.name = name
-        self.email = email
+    def __init__(self, name: str, email: str = None):
+        self.name = name.strip()
+        self.email = email.strip()
         self.avg_salary = 0.0
         self.count_employees = 0
         logger.debug('Created Department instance. Department name is %s, '

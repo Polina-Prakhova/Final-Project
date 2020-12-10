@@ -2,7 +2,6 @@
 import logging
 import os
 import sys
-from datetime import date
 
 from sqlalchemy.exc import IntegrityError
 from flask import render_template, url_for, request
