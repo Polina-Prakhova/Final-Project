@@ -74,14 +74,14 @@ class TestDB(unittest.TestCase):
     def test_get_department(self):
         """ Test getting existing department from database. """
         response = self.client.get(self.BASE + 'api/departments/1')
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
         department = json.loads(response.get_data(as_text=True))
         self.assertEqual(department.get('name'), 'HR')
 
     def test_get_all_departments(self):
         """ Test getting all existing departments from database. """
         response = self.client.get(self.BASE + 'api/departments')
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
         department = json.loads(response.get_data(as_text=True))
         self.assertEqual(len(department), 1)
 

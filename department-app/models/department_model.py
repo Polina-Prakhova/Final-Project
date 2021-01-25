@@ -21,8 +21,8 @@ class Department(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
-    avg_salary = db.Column(db.Float, nullable=False)
-    count_employees = db.Column(db.Integer, nullable=False)
+    avg_salary = db.Column(db.Float, nullable=False, default=0.0)
+    count_employees = db.Column(db.Integer, nullable=False, default=0)
     email = db.Column(db.String(64))
 
     def __init__(self, name: str, email: str = None):
